@@ -5,14 +5,23 @@ main {
 }
 
 .recipeCard {
+    display: block;
+    height: 100pt;
     margin: auto;
     margin-bottom: 10pt;
-    display: flex;
     width: 200pt;
     justify-content: space-evenly;
     border: 0.35em solid black;
     border-radius: 1em;
     align-items: center;
+    padding: 10pt;
+}
+
+.recipeCard img {
+    display: flex;
+    margin: auto;
+    height: 40pt;
+    width: 40pt;
 }
 
 body footer {
