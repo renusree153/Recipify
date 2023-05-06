@@ -26,3 +26,12 @@ body {
     width: 19%;
     margin-bottom: 15px;
 }
+
+body footer {
+    display: block;
+    left: 0;
+    right: 0;
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+}

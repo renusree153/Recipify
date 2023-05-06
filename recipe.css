@@ -1,0 +1,25 @@
+main {
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+}
+
+.recipeCard {
+    margin: auto;
+    margin-bottom: 10pt;
+    display: flex;
+    width: 200pt;
+    justify-content: space-evenly;
+    border: 0.35em solid black;
+    border-radius: 1em;
+    align-items: center;
+}
+
+body footer {
+    display: block;
+    left: 0;
+    right: 0;
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+}
