@@ -1,12 +1,23 @@
-main {
+#recipes {
     display: flex;
     flex-wrap: wrap;
     margin: auto;
+    text-align: center;
+}
+
+.dontShow {
+    display: none;
+}
+
+.showRevPadThai {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .recipeCard {
     display: block;
-    height: 100pt;
+    height: 200pt;
     margin: auto;
     margin-bottom: 10pt;
     width: 200pt;
