@@ -1,0 +1,45 @@
+#search {
+  margin-bottom: 20px;
+}
+
+#search-btn {
+  height: 15px;
+  width: 15px;
+}
+
+#cart {
+  float: right;
+  height: 30px;
+  width: 30px;
+}
+
+#grocery-board {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#grocery-board div {
+  width: 250px;
+  height: 300px;
+  border: 0.35em solid black;
+  border-radius: 1px;
+  margin: 5px;
+}
+
+#grocery-board div img {
+  width: 250px;
+  height: 200px;
+  border-bottom: 5px solid black;
+}
+
+#grocery-board div p {
+  margin: 8px;
+}
+
+#grocery-board div button {
+  margin-left: 8px;
+}
+
+.hidden {
+  display: none;
+}
