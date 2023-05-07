@@ -35,6 +35,13 @@
     width: 40pt;
 }
 
+.recipeCard .pluss {
+    margin-bottom: 10pt;
+    margin-left: 90%;
+    height: 10pt;
+    width: 10pt;
+}
+
 body footer {
     display: block;
     left: 0;
