@@ -7,21 +7,23 @@
     <script src="page.js"></script>
   </head>
   <body>
-    <img src="images/cart.jpg" alt="Cart" id="cart">
-    <section id="main-page">
-      <section id="search">
-        <input id="search-input">
-        <img src="images/search.jpg" alt="Search button" id="search-btn">
-        <button id="vegan">VEGAN</button>
-        <button id="vegetarian">VEGETARIAN</button>
-        <button id="reset">RESET</button>
+    <main>
+      <img src="images/cart.jpg" alt="Cart" id="cart">
+      <section id="main-page">
+        <section id="search">
+          <input id="search-input">
+          <img src="images/search.jpg" alt="Search button" id="search-btn">
+          <button id="vegan">VEGAN</button>
+          <button id="vegetarian">VEGETARIAN</button>
+          <button id="reset">RESET</button>
+        </section>
+        <section id="grocery-board">
+        </section>
       </section>
-      <section id="grocery-board">
+      <section id="cart-page" class="hidden">
+        <ul id="cart-list">
+        </ul>
       </section>
-    </section>
-    <section id="cart-page" class="hidden">
-      <ul id="cart-list">
-      </ul>
-    </section>
+    </main>
   </body>
 </html>
