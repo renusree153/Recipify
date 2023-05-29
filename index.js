@@ -9,8 +9,6 @@
     function showRev() {
         let board = document.querySelector("main");
         let padThai = document.getElementById("padThaiReview");
-        console.log(board);
-        console.log(padThai);
         if (board.classList.contains("dontShow")) {
             console.log("in if");
             board.classList.remove("dontShow");

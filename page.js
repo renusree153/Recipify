@@ -41,20 +41,56 @@
       desc.textContent += "VEGETARIAN "
       div.classList.add('vegetarian');
     }
+    if (NONVEGETARIAN.includes(name)) {
+      desc.textContent = "NON-VEGETARIAN"
+
+    }
     let btn = document.createElement('button');
+    let btn2 = document.createElement("button");
     btn.textContent = "ADD TO CART";
+    btn2.textContent = "VIEW RECIPES";
     btn.addEventListener('click', function() {
       let item = name;
       if (cartList[item] == null) {
         cartList[item] = 0;
       }
       cartList[item] = cartList[item] + 1;
+      createCartCard(event);
+    })
+    btn2.addEventListener("click", function() {
+      createRecipeCard(name);
     })
     div.appendChild(img);
     div.appendChild(p);
     div.appendChild(desc);
     div.appendChild(btn);
+    div.appendChild(btn2);
     document.getElementById('grocery-board').appendChild(div);
+  }
+
+  function createCartCard(event) {
+    let div = document.createElement("div");
+    let p = document.createElement("p");
+    p.textContent = "hello from cart div";
+    div.appendChild(p);
+    document.querySelector("main").appendChild(div);
+  }
+
+  function createRecipeCard(name) {
+    let div = document.createElement('div');
+    div.id = name + "recipes";
+    let p = document.createElement('p');
+    p.textContent = "Here are some recipes you can make with " + name;
+    div.appendChild(p);
+    div.classList.add("shortRecipes");
+    div.classList.add("no-blur");
+    document.querySelector("main").appendChild(div);
+    let button = document.createElement("button");
+    button.textContent = "Close out"
+    div.appendChild(button);
+    button.addEventListener("click", () => {
+      div.style.display = "none";
+    })
   }
 
   function search() {
@@ -95,6 +131,7 @@
     }
     cartPage.classList.toggle('hidden');
     mainPage.classList.toggle('hidden');
+    console.log("in cart view");
   }
 
   function printList() {

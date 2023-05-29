@@ -1,5 +1,10 @@
 #search {
+  margin-top: 60px;
   margin-bottom: 20px;
+}
+
+#title {
+  text-align: center;
 }
 
 #search-btn {
@@ -8,8 +13,16 @@
 }
 
 #cart {
+  margin-right: 40px;
   float: right;
+  margin-top: 20px;
   height: 30px;
+  width: 30px;
+}
+
+#cartp {
+  float: right;
+  height:30px;
   width: 30px;
 }
 
@@ -42,4 +55,26 @@
 
 .hidden {
   display: none;
+}
+
+.blur {
+  filter: blur(1px);
+}
+
+.shortRecipes {
+  width: 500px;
+  height: 500px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background-color:aliceblue;
+  border: 5px solid black;
+  margin-left: 50%;
+  margin-top: -600px;
+  z-index: 9999;
+  justify-content: center;
+  text-align: center;
+}
+
+.no-blur {
+  filter: none;
 }
