@@ -31,6 +31,30 @@
   flex-wrap: wrap;
 }
 
+#cart-page {
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto;
+}
+
+#cart-page div {
+  width: 700px;
+  height: 70px;
+  border: 0.35em solid black;
+  border-radius: 1px;
+  margin: 5px;
+}
+
+#cart-page p {
+  font-size: 15px;
+}
+
+#cart-page img {
+  width: 250px;
+  height: 200px;
+  border-bottom: 5px solid black;
+}
+
 #grocery-board div {
   width: 250px;
   height: 300px;

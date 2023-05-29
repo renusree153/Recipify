@@ -71,9 +71,10 @@
   function createCartCard(event) {
     let div = document.createElement("div");
     let p = document.createElement("p");
-    p.textContent = "hello from cart div";
+    p.textContent = "Cart div should contain name of grocery, type of item (vegan, etc), price, and image";
     div.appendChild(p);
     document.querySelector("main").appendChild(div);
+    document.getElementById("cart-page").appendChild(div);
   }
 
   function createRecipeCard(name) {
@@ -127,7 +128,7 @@
     let cartPage = document.getElementById('cart-page');
     let mainPage = document.getElementById('main-page');
     if (cartPage.classList.contains('hidden')) {
-      printList();
+      //printList();
     }
     cartPage.classList.toggle('hidden');
     mainPage.classList.toggle('hidden');
