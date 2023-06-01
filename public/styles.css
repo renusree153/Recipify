@@ -1,0 +1,37 @@
+body {
+    background-color: aliceblue;
+}
+
+#login {
+    background-color: white;
+    border-radius: 0.35em;
+    border: 5pt solid black;
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+#username {
+    font-size: 19px;
+    margin-bottom: 15px;
+}
+
+#password {
+    font-size: 19px;
+    margin-bottom: 15px;
+}
+
+#submitBtn {
+    font-size: 15px;
+    width: 19%;
+    margin-bottom: 15px;
+}
+
+body footer {
+    display: block;
+    left: 0;
+    right: 0;
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+}
