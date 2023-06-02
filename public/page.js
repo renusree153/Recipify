@@ -59,7 +59,7 @@
         cartList[item] = 0;
       }
       cartList[item] = cartList[item] + 1;
-      createCartCard(event);
+      createCartCard(item, img.src);
     })
     btn2.addEventListener("click", function() {
       createRecipeCard(name);
@@ -72,10 +72,17 @@
     document.getElementById('grocery-board').appendChild(div);
   }
 
-  function createCartCard(event) {
+  function createCartCard(item, img) {
     let div = document.createElement("div");
     let p = document.createElement("p");
-    p.textContent = "Cart div should contain name of grocery, type of item (vegan, etc), price, and image";
+    p.id = "nameItem";
+    let price = document.createElement("p");
+    price.id = "priceItem";
+    p.textContent = item;
+    let img2 = document.createElement("img");
+    img2.src = img;
+    img2.classList.add(".cartImg");
+    div.appendChild(img2);
     div.appendChild(p);
     document.querySelector("main").appendChild(div);
     document.getElementById("cart-page").appendChild(div);
@@ -88,7 +95,6 @@
     p.textContent = "Here are some recipes you can make with " + name;
     div.appendChild(p);
     div.classList.add("shortRecipes");
-    div.classList.add("no-blur");
     document.querySelector("main").appendChild(div);
     let button = document.createElement("button");
     button.textContent = "Close out"
@@ -147,5 +153,4 @@
       document.getElementById('cart-list').appendChild(li);
     }
   }
-
 })();

@@ -38,22 +38,26 @@
 }
 
 #cart-page div {
-  width: 700px;
-  height: 70px;
+  width: 150px;
+  height: 200px;
   border: 0.35em solid black;
   border-radius: 1px;
   margin: 5px;
+  margin: 5px;
 }
 
-
-#cart-page p {
+#nameItem {
   font-size: 15px;
+  margin-left: 10px;
 }
 
+/*#priceItem {
+
+}*/
 
 #cart-page img {
-  width: 250px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   border-bottom: 5px solid black;
 }
 
@@ -73,6 +77,7 @@
   border-radius: 1px;
   margin: 5px;
   text-align: center;
+  
 }
 
 #grocery-board.grid-view div img  {
@@ -114,8 +119,4 @@
   z-index: 9999;
   justify-content: center;
   text-align: center;
-}
-
-.no-blur {
-  filter: none;
 }
