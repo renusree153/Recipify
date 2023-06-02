@@ -4,11 +4,13 @@
     <meta charset="utf-8">
     <title>Recipes</title>
     <link rel="stylesheet" href="page.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
     <script src="page.js"></script>
   </head>
   <body>
     <main>
       <h2 id = "title"> Grocery Shopping </h2>
+      <button id="switchView">Switch View</button>
       <img src="images/cart.jpg" alt="Cart" id="cart">
       <p id = "cartp"> My cart </p>
       <section id="main-page">
@@ -19,7 +21,7 @@
           <button id="vegetarian">VEGETARIAN</button>
           <button id="reset">RESET</button>
         </section>
-        <section id="grocery-board">
+        <section id="grocery-board" class="grid-view">
         </section>
       </section>
       <section id="cart-page" class="hidden">

@@ -26,7 +26,7 @@
   width: 30px;
 }
 
-#grocery-board {
+#grocery-board.grid-view {
   display: flex;
   flex-wrap: wrap;
 }
@@ -45,9 +45,11 @@
   margin: 5px;
 }
 
+
 #cart-page p {
   font-size: 15px;
 }
+
 
 #cart-page img {
   width: 250px;
@@ -55,25 +57,40 @@
   border-bottom: 5px solid black;
 }
 
-#grocery-board div {
+#grocery-board.grid-view div {
   width: 250px;
   height: 300px;
   border: 0.35em solid black;
   border-radius: 1px;
   margin: 5px;
+  font-family: "Helvetica", sans-serif;
 }
 
-#grocery-board div img {
+#grocery-board.list-view div {
+  width: 200px;
+  height: 250px;
+  border: 0.35em solid black;
+  border-radius: 1px;
+  margin: 5px;
+  text-align: center;
+}
+
+#grocery-board.grid-view div img  {
   width: 250px;
   height: 200px;
   border-bottom: 5px solid black;
 }
 
-#grocery-board div p {
+#grocery-board.list-view div img  {
+  width: 100px;
+  height: 100px;
+}
+
+#grocery-board.grid-view div p {
   margin: 8px;
 }
 
-#grocery-board div button {
+#grocery-board.grid-view div button {
   margin-left: 8px;
 }
 
