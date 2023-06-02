@@ -20,13 +20,18 @@ async function getDBConnection() {
 }
 
 app.post("/checkUser", async (req, res) => {
-    let db = await getDBConnection();
-    let user = req.body.username;
-    let pass = req.body.password;
-    let query = ("SELECT * FROM users WHERE username='" + user + "' AND password='" + pass + "';");
-    let results = await db.all(query);
-    db.close();
-    res.json(results);
+    try{
+        let db = await getDBConnection();
+        let user = req.body.username;
+        let pass = req.body.password;
+        console.log(user + "  " + pass);
+        let query = "SELECT * FROM users WHERE username=? AND password=?;";
+        let results = await db.all(query, [user, pass]);
+        db.close();
+        res.json(results);
+    } catch (error) {
+        res.status(500).send("Server error");
+    }
 });
 
 app.post('/addUser', async (req, res) => {
@@ -48,7 +53,8 @@ app.get('/log', async (req, res) => {
 app.post('/test', async (req, res) => {
     let test = req.body.test;
     let db = await getDBConnection();
-    let all = await db.all("SELECT * FROM cart");
+    let query = ("SELECT * FROM cart");
+    let all = await db.all(query);
     db.close();
     res.json(all);
 })

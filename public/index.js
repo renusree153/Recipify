@@ -4,7 +4,6 @@
     function init() {
         //document.getElementById("showRevPadThai").addEventListener("click", showRev);
         //document.getElementById("goBackRecipes").addEventListener("click", showRev);
-        console.log(document.getElementById("submitBtn"));
         document.getElementById("submitBtn").addEventListener("click", submitFunc);
         let map = {}
     }
@@ -19,15 +18,22 @@
             console.log("in else");
             board.classList.add("dontShow");
             padThai.classList.remove("dontShow");
-        }   
+        }
     }
     function submitFunc() {
         console.log("in submit func");
         let username = document.getElementById("username").value;
         let password = document.getElementById("password").value;
-        fetch("/checkUser?username=" + username + "&password=" + password)
-            .then(resp => resp.json())
-            .then(res => console.log(res))
+        let bodyData = new FormData();
+        bodyData.append("username", username);
+        bodyData.append("password", password);
+        fetch("/checkUser", {method: "POST", body: bodyData})
+            .then(res => res.json())
+            .then(res => {
+                if (res.length > 0) {
+                    window.location.href = "page.html";
+                }
+            })
             .catch(err => {
                 console.error(err);
             })
