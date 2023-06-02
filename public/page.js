@@ -13,6 +13,10 @@
 
   function init() {
     ITEMS.forEach(createCard);
+    document.getElementById("switchView").addEventListener("click", function() {
+      document.getElementById("grocery-board").classList.toggle("grid-view");
+      document.getElementById("grocery-board").classList.toggle("list-view");
+    })
     document.getElementById('search-btn').addEventListener('click', search);
     document.getElementById('vegan').addEventListener('click', function() {
       filter("vegan");

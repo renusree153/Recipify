@@ -26,6 +26,7 @@ app.post("/checkUser", async (req, res) => {
     let query = ("SELECT * FROM users WHERE username='" + user + "' AND password='" + pass + "';");
     let results = await db.all(query);
     db.close();
+    console.log(results);
     res.json(results);
 });
 
