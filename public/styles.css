@@ -11,6 +11,15 @@ body {
     text-align: center;
 }
 
+.hidden {
+    display: none;
+}
+
+#creds {
+    text-align: center;
+    font-size: 25px;
+}
+
 #username {
     font-size: 19px;
     margin-bottom: 15px;

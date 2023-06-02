@@ -32,6 +32,8 @@
             .then(res => {
                 if (res.length > 0) {
                     window.location.href = "page.html";
+                } else {
+                    let showMsg = document.getElementById("creds").classList.remove("hidden");
                 }
             })
             .catch(err => {

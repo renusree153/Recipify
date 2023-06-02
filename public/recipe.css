@@ -1,6 +1,7 @@
 #recipes {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
     margin: auto;
     text-align: center;
 }
@@ -9,19 +10,11 @@
     display: none;
 }
 
-.showRevPadThai {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .recipeCard {
-    display: block;
-    height: 200pt;
+    height: 400px;
     margin: auto;
     margin-bottom: 10pt;
-    width: 200pt;
-    justify-content: space-evenly;
+    width: 200px;
     border: 0.35em solid black;
     border-radius: 1em;
     align-items: center;
