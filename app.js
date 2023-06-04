@@ -50,6 +50,23 @@ app.get('/log', async (req, res) => {
     console.log('hi there');
 });
 
+app.get("/getFoodItems", async (req,res) => {
+    let db = await getDBConnection();
+    let query = "SELECT * FROM groceries";
+    let results = await db.all(query);
+    db.close();
+    res.json(results);
+})
+
+app.post("/getRecipes", async (req, res) => {
+    let groceryItem = req.body.item;
+    let db = await getDBConnection();
+    let query = "SELECT * FROM groceryToRecipe WHERE name = ?";
+    let results = await db.all(query, [groceryItem]);
+    db.close();
+    res.json(results);
+})
+
 app.post('/test', async (req, res) => {
     let test = req.body.test;
     let db = await getDBConnection();
@@ -57,6 +74,25 @@ app.post('/test', async (req, res) => {
     let all = await db.all(query);
     db.close();
     res.json(all);
+})
+
+app.post("/getPrice", async (req, res) => {
+    let db = await getDBConnection();
+    let item = req.body.item;
+    let query = "SELECT price FROM groceries WHERE name = ?";
+    let results = await db.all(query, [item]);
+    db.close();
+    console.log(results);
+    res.json(results);
+})
+
+app.post("getRating", async (req, res) => {
+    let db = await getDBConnection();
+    let item = req.body.item;
+    let query = "SELECT average FROM ratings WHERE name = ?";
+    let results = await db.all(query, [item]);
+    db.close();
+    console.log(results);
 })
 
 

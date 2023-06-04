@@ -1,6 +1,7 @@
 'use strict';
 (function() {
 
+  // remove these later
   const ITEMS = ["Bok Choy", "Cabbage", "Carrot", "Chicken", "Eggs",
                  "Green Onion", "Lettuce", "Milk", "Peanut", "Potato",
                  "Red Onion", "Yellow Onion"];
@@ -12,7 +13,14 @@
   window.addEventListener('load', init);
 
   function init() {
-    ITEMS.forEach(createCard);
+    fetch("/getFoodItems")
+      .then(res => res.json())
+      .then(res => {
+        for (let i = 0; i < res.length; i++) {
+          createCard(res[i]);
+        }
+      })
+    //ITEMS.forEach(createCard);
     document.getElementById("switchView").addEventListener("click", function() {
       document.getElementById("grocery-board").classList.toggle("grid-view");
       document.getElementById("grocery-board").classList.toggle("list-view");
@@ -24,37 +32,40 @@
     document.getElementById('vegetarian').addEventListener('click', function() {
       filter("vegetarian");
     });
+    document.getElementById("lessThan3").addEventListener("click", function() {
+      filterPrice()
+    })
     document.getElementById('reset').addEventListener('click', reset);
     document.getElementById('cart').addEventListener('click', toggleView);
   }
 
-  function createCard(name) {
+  function createCard(card) {
     let div = document.createElement('div');
-    div.id = name;
+    div.id = card.name;
     let img = document.createElement('img');
-    img.src = "images/items/" + name + ".jpg";
+    img.src = "images/items/" + card.name.toLowerCase() + ".jpg";
     img.alt = "image of grocery item";
     let p = document.createElement('p');
     let desc = document.createElement('p');
-    p.textContent = name;
-    if (!NONVEGAN.includes(name)) {
+    p.textContent = card.name;
+    if (card.vegan == 1) {
       desc.textContent += "VEGAN "
       div.classList.add('vegan');
     }
-    if (!NONVEGETARIAN.includes(name)) {
+    if (card.vegetarian == 1) {
       desc.textContent += "VEGETARIAN "
       div.classList.add('vegetarian');
     }
-    if (NONVEGETARIAN.includes(name)) {
+    else {
       desc.textContent = "NON-VEGETARIAN"
-
     }
     let btn = document.createElement('button');
     let btn2 = document.createElement("button");
     btn.textContent = "ADD TO CART";
-    btn2.textContent = "VIEW RECIPES";
+    btn2.textContent = "VIEW INFORMATION/RECIPES";
+    btn2.id = "infoBtn";
     btn.addEventListener('click', function() {
-      let item = name;
+      let item = card.name;
       if (cartList[item] == null) {
         cartList[item] = 0;
       }
@@ -62,7 +73,7 @@
       createCartCard(item, img.src);
     })
     btn2.addEventListener("click", function() {
-      createRecipeCard(name);
+      createRecipeCard(card.name);
     })
     div.appendChild(img);
     div.appendChild(p);
@@ -91,17 +102,44 @@
   function createRecipeCard(name) {
     let div = document.createElement('div');
     div.id = name + "recipes";
-    let p = document.createElement('p');
-    p.textContent = "Here are some recipes you can make with " + name;
+    let p = document.createElement('h2');
+    p.textContent = "Here is some information about " + name + " including recipes and item availabiliy";
     div.appendChild(p);
     div.classList.add("shortRecipes");
     document.querySelector("main").appendChild(div);
-    let button = document.createElement("button");
-    button.textContent = "Close out"
-    div.appendChild(button);
-    button.addEventListener("click", () => {
-      div.style.display = "none";
-    })
+    let bodyData = new FormData();
+    bodyData.append("item", name);
+    let recipeInfo = document.createElement("h4");
+    recipeInfo.textContent = "Listed below are some recipes you can make!";
+    let itemPrice = document.createElement("p");
+    fetch("/getPrice", {method: "POST", body: bodyData})
+      .then(res => res.json())
+      .then(res => {
+        console.log(res[0].price);
+        itemPrice.id = "itemPrice";
+        itemPrice.textContent = "The price of this item is $" + res[0].price;
+      });
+    div.appendChild(itemPrice);
+    fetch("/getRecipes", {method: "POST", body: bodyData})
+      .then(res => res.json())
+      .then(res => {
+        for (let i = 0; i < res.length; i++) {
+          let newRec = document.createElement("p");
+          newRec.textContent = "- " + res[i].recipe;
+          div.appendChild(newRec);
+        }
+        let button = document.createElement("button");
+        button.textContent = "Close out"
+        div.appendChild(button);
+        button.addEventListener("click", () => {
+          div.style.display = "none";
+        })
+      })
+      .catch(err => {
+        console.error(err);
+      })
+      div.appendChild(recipeInfo);
+
   }
 
   function search() {
@@ -119,7 +157,22 @@
 
   function filter(restriction) {
     document.querySelectorAll('#grocery-board div').forEach(function(element) {
+      console.log(element);
       if (element.classList.contains(restriction)) {
+        element.style.display = "inline";
+      } else {
+        element.style.display = "none";
+      }
+    });
+  }
+
+  function filterPrice (price) {
+    document.querySelectorAll('#grocery-board div').forEach(function(element) {
+      let id = element.id + "recipes";
+      let btn = document.getElementById(id);
+      console.log(btn);
+      console.log(btn.querySelector("#itemPrice"));
+      if (element.querySelector("p").value) {
         element.style.display = "inline";
       } else {
         element.style.display = "none";

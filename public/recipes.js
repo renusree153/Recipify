@@ -20,5 +20,8 @@
         reviewBtn.textContent = "Show Reviews";
         document.getElementById("recipes").appendChild(name,reviewBtn,submitRatingBtn);
         document.getElementById("recipes").classList.add("recipeCard");
+    }  
+    function avgRating() {
+        
     }
 })();
