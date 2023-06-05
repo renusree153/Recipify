@@ -52,13 +52,28 @@
             let button = document.createElement("button");
             button.textContent = "Add your review"
             div.appendChild(button);
-            let addRev = false;
+            let textBox = document.createElement("input");
+            textBox.type = "text";
+            div.appendChild(textBox);
             button.addEventListener("click", function (event) {
-                if (!addRev) {
-                    let textBox = document.createElement("input");
-                    textBox.type = "text";
-                    div.appendChild(textBox);
-                    addRev = true;
+                if (textBox.value) {
+                    let reviewText = "- " + textBox.value;
+                    let p = document.createElement("p");
+                    p.textContent = reviewText;
+                    div.insertBefore(p, button);
+                    let bodyData = new FormData();
+                    bodyData.append("recipeName", review.recipe);
+                    bodyData.append("reviewName", p);
+                    fetch("/addReview", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(bodyData)
+                    })
+                    .then(res => res.json())
+                    .then(res => console.log(res))
+                    .catch(err => console.error(err));
                 }
             })
           })

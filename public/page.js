@@ -139,7 +139,6 @@
         console.error(err);
       })
       div.appendChild(recipeInfo);
-
   }
 
   function search() {
@@ -170,7 +169,6 @@
     document.querySelectorAll('#grocery-board div').forEach(function(element) {
       let id = element.id + "recipes";
       let btn = document.getElementById(id);
-      console.log(btn);
       console.log(btn.querySelector("#itemPrice"));
       if (element.querySelector("p").value) {
         element.style.display = "inline";
@@ -184,7 +182,6 @@
     document.querySelectorAll('#grocery-board div').forEach(function(element) {
       element.style.display = "inline";
     });
-    console.log(cartList);
   }
 
   function toggleView() {
@@ -195,7 +192,6 @@
     }
     cartPage.classList.toggle('hidden');
     mainPage.classList.toggle('hidden');
-    console.log("in cart view");
   }
 
   function printList() {
