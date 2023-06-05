@@ -32,6 +32,7 @@
             .then(res => {
                 if (res.length > 0) {
                     window.location.href = "page.html";
+                    window.localStorage.setItem('user', username);
                 } else {
                     let showMsg = document.getElementById("creds").classList.remove("hidden");
                 }
