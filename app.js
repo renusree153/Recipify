@@ -115,6 +115,12 @@ app.post("/getReviews", async(req, res) => {
 
 })
 
+app.get("/allRecipes", async(req, res) => {
+    let db = await getDBConnection();
+    let recipes = await db.all ("SELECT name FROM ratings");
+    res.json(recipes);
+})
+
 app.post('/addReview', async (req, res) => {
     let recipeName = req.body.recipe;
     let reviewName = req.body.review;

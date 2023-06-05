@@ -3,7 +3,7 @@
 (function () {
     window.addEventListener("load", init);
     function init() {
-        console.log("hi");
+        retrieveRecipes();
         document.querySelectorAll(".submitRating").forEach(function (element) {
             element.addEventListener("click", function (event) {
               console.log(event.target.closest(".recipeCard"));
@@ -18,18 +18,55 @@
               })
           });
     }
-    function createRecipeCardd(resp) {
-        let name = document.createElement("h2");
-        name.textContent = resp.name;
-        let submitRatingBtn = document.createElement("button");
-        submitRatingBtn.id = "submitRating";
-        submitRatingBtn.textContent = "Submit Rating";
-        let reviewBtn = document.createElement("button");
-        reviewBtn.id = "reviewBtn";
-        reviewBtn.textContent = "Show Reviews";
-        document.getElementById("recipes").appendChild(name,reviewBtn,submitRatingBtn);
-        document.getElementById("recipes").classList.add("recipeCard");
-    }  
+    function retrieveRecipes() {
+        fetch("/allRecipes")
+          .then(res => res.json())
+          .then(res => {
+            res.forEach(recipe => {
+                let recipeCard = document.createElement("section");
+                recipeCard.classList.add("recipeCard");
+                let recipeImg = document.createElement("img");
+                recipeImg.src = `images/${recipe.name}.jpg`;
+                console.log(recipeImg.src);
+                let recipeName = document.createElement("h2");
+                recipeName.textContent = recipe.name;
+                let ratingForm = document.createElement("form");
+                let avgRat = document.createElement("p");
+                avgRat.textContent = " Average rating is: ";
+                for (let i = 1; i <= 5; i++) {
+                  let ratingInput = document.createElement('input');
+                  let ratingLabel = document.createElement('label');
+                  ratingInput.type = 'radio';
+                  ratingInput.id = `rating${i}`;
+                  ratingInput.name = 'rating';
+                  ratingInput.value = i;
+                  ratingLabel.for = `rating${i}`;
+                  ratingLabel.textContent = i;
+                  ratingForm.appendChild(ratingInput);
+                  ratingForm.appendChild(ratingLabel);
+                }
+                recipeCard.appendChild(recipeImg);
+                recipeCard.appendChild(recipeName);
+                recipeCard.appendChild(avgRat);
+                recipeCard.appendChild(ratingForm);
+                let btn1 = document.createElement("button");
+                btn1.id = "submitRtg"
+                btn1.textContent = "Submit Rating";
+                btn1.addEventListener("click", function (event) {
+                  let rating = document.querySelector('input[name="rating"]:checked').value;
+                });
+                recipeCard.appendChild(btn1);
+                let btn2 = document.createElement("button");
+                btn2.id = "showRev";
+                btn2.textContent = "Show Reviews";
+                btn2.addEventListener("click", function (event) {
+                  createRecipeCard(recipeName.textContent);
+                })
+                recipeCard.appendChild(btn2);
+                document.getElementById("recipes").appendChild(recipeCard);
+            })
+          });
+    }
     function createRecipeCard(name) {
         console.log("here in create recipe card");
         let div = document.createElement('div');
@@ -52,6 +89,12 @@
             let button = document.createElement("button");
             button.textContent = "Add your review"
             div.appendChild(button);
+            let btn2 = document.createElement("button");
+            btn2.textContent = "Close out";
+            div.appendChild(btn2);
+            btn2.addEventListener("click", function(event) {
+                div.style.display = "none";
+            })
             let textBox = document.createElement("input");
             textBox.type = "text";
             div.appendChild(textBox);

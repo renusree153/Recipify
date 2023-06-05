@@ -10,8 +10,16 @@ header {
     text-align: center;
 }
 
+#submitRtg {
+    margin-top: 8%;
+}
+
 .dontShow {
     display: none;
+}
+
+#showRev {
+    margin-top: 8%;
 }
 
 .recipeCard {
