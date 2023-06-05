@@ -86,7 +86,7 @@ app.post("/getPrice", async (req, res) => {
     res.json(results);
 })
 
-app.post("getRating", async (req, res) => {
+app.post("/getRating", async (req, res) => {
     let db = await getDBConnection();
     let item = req.body.item;
     let query = "SELECT average FROM ratings WHERE name = ?";
@@ -95,6 +95,19 @@ app.post("getRating", async (req, res) => {
     console.log(results);
 })
 
+app.post("/getReviews", async(req, res) => {
+    try {
+        let db = await getDBConnection();
+        let name = req.body.item;
+        let query = "SELECT comment FROM review WHERE recipe = ?"
+        let results = await db.all(query, [name]);
+        db.close();
+        res.json(results);
+    } catch (err) {
+        console.error(err);
+    }
+
+})
 
 app.use(express.static("public"));
 const PORT = process.env.PORT || 8000;
