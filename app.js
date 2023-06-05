@@ -76,6 +76,16 @@ app.post('/test', async (req, res) => {
     res.json(all);
 })
 
+app.post('/getItemInfo', async (req, res) => {
+    let db = await getDBConnection();
+    let item = req.body.item;
+    let query = "SELECT * FROM groceries WHERE name = ?";
+    let results = await db.all(query, [item]);
+    db.close();
+    console.log(results);
+    res.json(results);
+})
+
 app.post("/getPrice", async (req, res) => {
     let db = await getDBConnection();
     let item = req.body.item;
@@ -86,13 +96,31 @@ app.post("/getPrice", async (req, res) => {
     res.json(results);
 })
 
-app.post("getRating", async (req, res) => {
+app.post("/getRating", async (req, res) => {
     let db = await getDBConnection();
     let item = req.body.item;
     let query = "SELECT average FROM ratings WHERE name = ?";
     let results = await db.all(query, [item]);
     db.close();
     console.log(results);
+})
+
+app.post('/addToCart', async (req, res) => {
+    let item = req.body.item;
+    let user = req.body.id;
+    let db = await getDBConnection();
+    let query = "INSERT INTO cart (user, name) VALUES (?, ?)";
+    db.run(query, [user, item]);
+    db.close();
+})
+
+app.post('/checkCart', async (req, res) => {
+    let user = req.body.user;
+    let db = await getDBConnection();
+    let query = "SELECT * FROM cart WHERE user = ?"
+    let cartInfo = await db.all(query, [user]);
+    db.close();
+    res.json(cartInfo);
 })
 
 
