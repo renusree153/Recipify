@@ -111,3 +111,14 @@
   justify-content: center;
   text-align: center;
 }
+
+#confirmation {
+  height: 400px;
+  margin: auto;
+  margin-bottom: 10pt;
+  width: 200px;
+  border: 0.35em solid black;
+  border-radius: 1em;
+  align-items: center;
+  padding: 10pt;
+}

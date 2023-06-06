@@ -29,6 +29,9 @@
     document.getElementById("lessThan5").addEventListener('click', function() {
       filterPrice(5);
     })
+    document.getElementById('all').addEventListener('click', function() {
+      getConfirmation(true, null);
+    })
 
     document.getElementById('reset').addEventListener('click', reset);
     document.getElementById('cart').addEventListener('click', toggleView);
@@ -113,7 +116,7 @@
     btn.textContent = "Purchase";
     btn2.textContent = "Remove";
     btn.addEventListener('click', function() {
-      purchase(id);
+      getConfirmation(false, id);
     });
     btn2.addEventListener('click', function() {
       removeCart(id);
@@ -133,6 +136,46 @@
     bodyData.append("id", id);
     fetch('/remove', {method: "post", body: bodyData}).catch(console.error);
     document.getElementById(id).remove();
+  }
+
+  function purchaseAll() {
+    let user = window.localStorage.getItem('user');
+    let bodyData = new FormData();
+    bodyData.append('user', user);
+    fetch('/checkCart', {method: "post", body:bodyData})
+      .then(res => res.json())
+      .then(function(res) {
+        res.forEach(function(element) {
+          purchase(element.id);
+        });
+      })
+  }
+
+  function getConfirmation(all, id) {
+    console.log('hi');
+    let div = document.createElement('div');
+    div.id = 'confirmation';
+    let ptag = document.createElement('p');
+    ptag.textContent = "Confirm your transaction";
+    let article = document.createElement('article');
+    let btn = document.createElement('button');
+    btn.textContent = "Confirm";
+    btn.addEventListener('click', function() {
+      if (all) {
+        purchaseAll();
+      } else {
+        purchase(id);
+      }
+      document.getElementById('confirmation').remove();
+    });
+    let btn2 = document.createElement('button');
+    btn2.addEventListener('click',   function() {
+      document.getElementById('confirmation').remove();
+    });
+    btn2.textContent = "Decline";
+    article.append(btn, btn2);
+    div.append(ptag, article);
+    document.querySelector('main').prepend(div);
   }
 
   function createRecipeCard(name) {
@@ -231,8 +274,7 @@
     let mainPage = document.getElementById('main-page');
     cartPage.classList.toggle('hidden');
     mainPage.classList.toggle('hidden');
-    if (!(cartPage.classList.contains('hidden'))) {
-    }
+    document.getElementById('all').classList.toggle('hidden');
   }
 
   function printList() {
