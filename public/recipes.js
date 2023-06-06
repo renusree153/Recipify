@@ -31,8 +31,6 @@
                 let recipeName = document.createElement("h2");
                 recipeName.textContent = recipe.name;
                 let ratingForm = document.createElement("form");
-                let avgRat = document.createElement("p");
-                avgRat.textContent = " Average rating is: ";
                 for (let i = 1; i <= 5; i++) {
                   let ratingInput = document.createElement('input');
                   let ratingLabel = document.createElement('label');
@@ -47,14 +45,39 @@
                 }
                 recipeCard.appendChild(recipeImg);
                 recipeCard.appendChild(recipeName);
-                recipeCard.appendChild(avgRat);
                 recipeCard.appendChild(ratingForm);
                 let btn1 = document.createElement("button");
                 btn1.id = "submitRtg"
                 btn1.textContent = "Submit Rating";
                 btn1.addEventListener("click", function (event) {
                   let rating = document.querySelector('input[name="rating"]:checked').value;
+                  console.log(rating);
+                  let bodyData = new FormData();
+                  bodyData.append("name", recipe.name);
+                  bodyData.append("rate", rating);
+                  fetch("/insertRating", {method: "POST", body: bodyData})
+                    .then(res => res.json())
+                    .then(res => console.log(res));
                 });
+                let avgRating = document.createElement("p");
+                let bodyData = new FormData();
+                bodyData.append("recipe", recipe.name);
+                fetch("/getAvgRating", {method: "POST", body: bodyData})
+                  .then(res => res.json())
+                  .then(res => {
+                    console.log(res);
+                    let avgRate = 0;
+                    let count = 0;
+                    res.forEach(resObj => {
+                      let rating = resObj.rating;
+                      count += 1;
+                      console.log()
+                      avgRate += rating;
+                      console.log(rating);
+                    })
+                    avgRating.textContent = "Average Rating is: " + (avgRate/count).toFixed(1) + "/5";
+                    recipeCard.appendChild(avgRating);
+                  });
                 recipeCard.appendChild(btn1);
                 let btn2 = document.createElement("button");
                 btn2.id = "showRev";

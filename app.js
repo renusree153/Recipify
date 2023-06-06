@@ -73,6 +73,27 @@ app.post("/getRecipes", async (req, res) => {
     res.json(results);
 })
 
+app.post("/insertRating", async(req, res) => {
+  let recipeName = req.body.name;
+  let ratingData = req.body.rate;
+  console.log(ratingData);
+  let db = await getDBConnection();
+  let query = "INSERT INTO ratings (name, rating) VALUES (?, ?)";
+  let result = (await db.run(query, [recipeName, ratingData]));
+  db.close();
+  res.json({msg: "Added new data"});
+})
+
+app.post("/getAvgRating", async (req, res) => {
+    let item = req.body.recipe;
+    console.log(item);
+    let db = await getDBConnection();
+    let query = "SELECT rating FROM ratings WHERE name = ?"
+    let results = await db.all(query, [item]);
+    db.close();
+    res.json(results);
+})
+
 app.post('/test', async (req, res) => {
     let test = req.body.test;
     let db = await getDBConnection();
@@ -138,6 +159,7 @@ app.post("/getReviews", async(req, res) => {
         let query = "SELECT * FROM review WHERE recipe = ?"
         let results = await db.all(query, [name]);
         db.close();
+        console.log(results);
         res.json(results);
     } catch (err) {
         console.error(err);
@@ -147,7 +169,7 @@ app.post("/getReviews", async(req, res) => {
 
 app.get("/allRecipes", async(req, res) => {
     let db = await getDBConnection();
-    let recipes = await db.all ("SELECT name FROM ratings");
+    let recipes = await db.all ("SELECT DISTINCT name FROM ratings");
     res.json(recipes);
 })
 
