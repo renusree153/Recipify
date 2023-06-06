@@ -28,6 +28,7 @@
    * purchase history for them
    */
   function fillPurchases(name) {
+    console.log(name);
     let bodyData = new FormData();
     bodyData.append("name", name);
     fetch("/getPurchases", {method: 'POST', body: bodyData})

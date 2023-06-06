@@ -18,7 +18,7 @@
    */
   function init() {
     setUsername();
-    document.getElementById("submitBtn").addEventListener("click", submitFunc);
+    document.getElementById("submit-btn").addEventListener("click", submitFunc);
   }
 
   /**

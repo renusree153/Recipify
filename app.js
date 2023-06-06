@@ -451,6 +451,7 @@ app.post("/getPurchases", async (req, res) => {
   let db = await getDBConnection();
   let query = "SELECT * FROM purchaseInfo AS t JOIN purchases AS p ON t.user = p.user WHERE t.user = ?";
   let all = await db.all(query, [userName]);
+  console.log("all" + all);
   db.close();
   res.json(all);
 });

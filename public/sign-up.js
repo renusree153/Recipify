@@ -45,7 +45,7 @@
         if (res.error == "Username already exists") {
           document.getElementById("dupUser").classList.remove("hidden");
         } else {
-          window.location.href = "page.html";
+          window.location.href = "index.html";
         }
       })
       .catch(err => {
