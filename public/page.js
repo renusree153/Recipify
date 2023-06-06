@@ -227,6 +227,14 @@
   }
 
   function createRecipeCard(name) {
+    let itemPrice = document.createElement("p");
+    itemPrice.textContent = "The price of this item is $" + res[0].price;
+    let availability = document.createElement('p');
+    if (res[0].stock > 0) {
+      availability.textContent = "In Stock";
+    } else {
+      availability.textContent = "out of Stock";
+    }
     let div = document.createElement('div');
     div.id = name + "recipes";
     let p1 = document.createElement('h2');

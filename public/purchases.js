@@ -20,22 +20,27 @@
           img.src = "/images/items/" + resObj.name + ".jpg";
           img.class = "imgSize";
           newDiv.id = "purchaseDiv";
-          let itemDes = document.createElement("p").textContent = "Item name is: " + resObj.name;
+          let itemDes = document.createElement("p")
+          itemDes.textContent = "Item name is: " + resObj.name;
           let purchaseId = document.createElement("p");
           purchaseId.textContent = "The purchase ID of this order is: " + resObj.id;
           purchaseId.id = "purchaseID";
           let purchaseDate = document.createElement("p");
           purchaseDate.textContent = "The date of this purchase is: " + resObj.date;
-          newDiv.appendChild(img);
-          newDiv.appendChild(itemDes);
-          newDiv.appendChild(purchaseId);
-          newDiv.appendChild(purchaseDate);
+          appendChildren(newDiv, img, itemDes, purchaseId, purchaseDate);
           document.getElementById("purchases-items").appendChild(newDiv);
         });
       })
       .catch(err => {
         handleError(err);
       });
+  }
+
+  function appendChildren (newDiv, img, itemDes, purchaseId, purchaseDate) {
+    newDiv.appendChild(img);
+    newDiv.appendChild(itemDes);
+    newDiv.appendChild(purchaseId);
+    newDiv.appendChild(purchaseDate);
   }
   async function statusCheck(response) {
     if (!response.ok) {

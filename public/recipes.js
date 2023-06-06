@@ -14,9 +14,9 @@
         let name = event.target.closest(".recipeCard").querySelector("h2").textContent;
         name = name.toLowerCase();
         createRecipeCard(name);
-      })
+      });
     });
-  };
+  }
   function retrieveRecipes() {
     fetch("/allRecipes")
       .then(res => res.json())
@@ -30,9 +30,7 @@
           recipeName.textContent = recipe.name;
           let ratingForm = document.createElement("form");
           defineRating();
-          recipeCard.appendChild(recipeImg);
-          recipeCard.appendChild(recipeName);
-          recipeCard.appendChild(ratingForm);
+          appendChildren(recipeCard, recipeImg, recipeName, ratingForm);
           let btn1 = document.createElement("button");
           btn1.id = "submitRtg";
           btn1.textContent = "Submit Rating";
@@ -49,6 +47,12 @@
           document.getElementById("recipes").appendChild(recipeCard);
         });
       });
+    }
+
+    function appendChildren(recipeCard, recipeImg, recipeName, ratingForm) {
+      recipeCard.appendChild(recipeImg);
+      recipeCard.appendChild(recipeName);
+      recipeCard.appendChild(ratingForm);
     }
 
     function btn1Func() {
