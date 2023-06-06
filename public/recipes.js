@@ -106,7 +106,6 @@
       fetch("/insertRating", {method: "POST", body: bodyData})
         .then(statusCheck)
         .then(res => res.json())
-        .then(res => console.log(res));
     });
   }
 
@@ -189,7 +188,7 @@
         div.appendChild(btn2);
         btn2Func(btn2, div);
         let textBox = createTextBox(div);
-        buttonFunc(button, textBox, div, name, p1);
+        buttonFunc(button, textBox, div, name);
       })
       .catch(err => {
         console.error("Error retrieving dat ", err);
@@ -254,8 +253,8 @@
    * @param {name} name - this is the name of the recipe
    * @param {p1} p1 - this is the text of the review that we want to insert
    */
-  function buttonFunc(button, textBox, div, name, p1) {
-    button.addEventListener("click", function (event) {
+  function buttonFunc(button, textBox, div, name) {
+    button.addEventListener("click", function () {
       if (textBox.value) {
         let reviewText = "- " + textBox.value;
         let p1 = document.createElement("p");
@@ -270,7 +269,9 @@
           body: (bodyData)
         })
           .then(res => res.json())
-          .catch(err => console.error(err));
+          .catch(err => {
+            handleError(err);
+          });
         }
     });
   }

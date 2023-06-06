@@ -16,30 +16,30 @@
       method: "POST",
       body: bodyData
     })
-        .then(statusCheck)
-        .then(res => res.json())
-        .then(res => {
-          if (res.error == "Username already exists") {
-            document.getElementById("dupUser").classList.remove("hidden");
-          } else {
-            window.location.href = "page.html";
-          }
-        })
-        .catch(err => {
-          handleError(err);
-        })
+      .then(statusCheck)
+      .then(res => res.json())
+      .then(res => {
+        if (res.error == "Username already exists") {
+          document.getElementById("dupUser").classList.remove("hidden");
+        } else {
+          window.location.href = "page.html";
+        }
+      })
+      .catch(err => {
+        handleError(err);
+      });
   }
-    async function statusCheck(response) {
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
-      return response;
+  async function statusCheck(response) {
+    if (!response.ok) {
+      throw new Error(await response.text());
     }
-    
-    function handleError(err) {
-      let p1 = document.createElement("p");
-      p1.textContent = "There has been an error retrieving your data. Please try again" +
+    return response;
+  }
+
+  function handleError(err) {
+    let p1 = document.createElement("p");
+    p1.textContent = "There has been an error retrieving your data. Please try again" +
         "Here is the error: " + err;
-      document.getElementById("main").appendChild(p1);
-    }
+    document.getElementById("main").appendChild(p1);
+  }
 })();
