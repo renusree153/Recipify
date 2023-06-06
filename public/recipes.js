@@ -41,6 +41,7 @@
    */
   function retrieveRecipes() {
     fetch("/allRecipes")
+      .then(statusCheck)
       .then(res => res.json())
       .then(res => {
         res.forEach(recipe => {
@@ -68,7 +69,10 @@
           recipeCard.appendChild(btn2);
           document.getElementById("recipes").appendChild(recipeCard);
         });
-      });
+      })
+      .catch(err => {
+        handleError(err);
+      })
   }
 
   /**
@@ -106,6 +110,9 @@
       fetch("/insertRating", {method: "POST", body: bodyData})
         .then(statusCheck)
         .then(res => res.json())
+        .catch(err => {
+          handleError(err);
+        })
     });
   }
 
@@ -121,6 +128,7 @@
     let bodyData = new FormData();
     bodyData.append("recipe", recipe.name);
     fetch("/getAvgRating", {method: "POST", body: bodyData})
+      .then(statusCheck)
       .then(res => res.json())
       .then(res => {
         let avgRate = 0;
@@ -132,7 +140,10 @@
         });
         avgRating.textContent = "Average Rating is: " + (avgRate / count).toFixed(1) + "/5";
         recipeCard.appendChild(avgRating);
-      });
+      })
+      .catch(err => {
+        handleError(err);
+      })
   }
 
   /**
@@ -175,6 +186,7 @@
     let bodyData = new FormData();
     bodyData.append("item", name);
     fetch("/getReviews", {method: "POST", body: bodyData})
+      .then(statusCheck)
       .then(res => res.json())
       .then(res => {
         res.forEach((review) => {
@@ -191,8 +203,8 @@
         buttonFunc(button, textBox, div, name);
       })
       .catch(err => {
-        console.error("Error retrieving dat ", err);
-      })
+        handleError(err);
+      });
   }
 
   /**
@@ -268,6 +280,7 @@
           method: "POST",
           body: (bodyData)
         })
+          .then(statusCheck)
           .then(res => res.json())
           .catch(err => {
             handleError(err);
