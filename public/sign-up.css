@@ -11,12 +11,7 @@ body {
     text-align: center;
 }
 
-#username {
-    font-size: 19px;
-    margin-bottom: 15px;
-}
-
-#password {
+#username, #password, #email {
     font-size: 19px;
     margin-bottom: 15px;
 }
@@ -34,4 +29,13 @@ body footer {
     position: fixed;
     bottom: 0;
     text-align: center;
+}
+
+#dupUser {
+    text-align: center;
+    font-size: 25px;
+}
+
+.hidden {
+    display: none;
 }

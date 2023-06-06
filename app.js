@@ -37,10 +37,16 @@ app.post("/checkUser", async (req, res) => {
 app.post('/addUser', async (req, res) => {
     let user = req.body.username;
     let pass = req.body.password;
+    console.log(user);
+    console.log(pass);
     let db = await getDBConnection();
-    const query = "INSERT INTO users (username, password)" +
+    let existingUser = await db.get('SELECT * FROM users WHERE username = ?', [user]);
+    if (existingUser) {
+        res.json({error: "Username already exists"});
+    }
+    const query2 = "INSERT INTO users (username, password)" +
       " VALUES (?, ?)";
-    db.run(query, [user, pass]);
+    db.run(query2, [user, pass]);
     let users = await db.all("SELECT * FROM users");
     db.close();
     res.json(users);
@@ -96,7 +102,7 @@ app.post("/getPrice", async (req, res) => {
     res.json(results);
 })
 
-app.post("/getRating", async (req, res) => {
+app.post("//getRating", async (req, res) => {
     let db = await getDBConnection();
     let item = req.body.item;
     let query = "SELECT average FROM ratings WHERE name = ?";
@@ -123,6 +129,39 @@ app.post('/checkCart', async (req, res) => {
     res.json(cartInfo);
 })
 
+app.post("/getReviews", async(req, res) => {
+    try {
+        let db = await getDBConnection();
+        let name = req.body.item;
+        let query = "SELECT comment FROM review WHERE recipe = ?"
+        let results = await db.all(query, [name]);
+        db.close();
+        res.json(results);
+    } catch (err) {
+        console.error(err);
+    }
+
+})
+
+app.get("/allRecipes", async(req, res) => {
+    let db = await getDBConnection();
+    let recipes = await db.all ("SELECT name FROM ratings");
+    res.json(recipes);
+})
+
+app.post('/addReview', async (req, res) => {
+    let recipeName = req.body.recipe;
+    let reviewName = req.body.review;
+    let db = await getDBConnection();
+    const query = "INSERT INTO review (recipeName, reviewName)" +
+      " VALUES (?, ?)";
+    db.run(query, [recipeName, reviewName]);
+    let users = await db.all("SELECT * FROM review");
+    db.close();
+    res.json(users);
+})
+
+//change review to not have ratings column
 
 app.use(express.static("public"));
 const PORT = process.env.PORT || 8000;

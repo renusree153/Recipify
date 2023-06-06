@@ -5,9 +5,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Set!</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="index.js"></script>
+    <title>Sign up for an account</title>
+    <link rel="stylesheet" href="sign-up.css">
+    <script src="sign-up.js"></script>
   </head>
   <body>
     <header>
@@ -22,11 +22,14 @@
         <form action = "/url" method = "POST">
             <input type="text" value="Password" id="password" name="password">
         </form>
+        <form action = "/url" method = "POST">
+          <input type="text" value="Email" id="email" name="email">
+        </form>
         <button id="submitBtn" type="button">Sign Up</button>
       </section>
-      <footer>
-        <a href="recipes.html">Browse Recipes</a>
-      </footer>
+      <div id="dupUser" class="hidden">
+        <p id="incUser">Username already exists please try again!</p>
+      </div>
     </main>
   </body>
 </html>

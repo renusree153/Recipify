@@ -4,6 +4,7 @@
   window.addEventListener('load', init);
 
   function init() {
+
     fetch("/getFoodItems")
       .then(res => res.json())
       .then(res => {
@@ -141,7 +142,6 @@
         console.error(err);
       })
       div.appendChild(recipeInfo);
-
   }
 
   function search() {
@@ -184,7 +184,6 @@
     document.querySelectorAll('#grocery-board div').forEach(function(element) {
       element.style.display = "inline";
     });
-    console.log(cartList);
   }
 
   function toggleView() {

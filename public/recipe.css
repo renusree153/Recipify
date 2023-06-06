@@ -10,8 +10,16 @@ header {
     text-align: center;
 }
 
+#submitRtg {
+    margin-top: 8%;
+}
+
 .dontShow {
     display: none;
+}
+
+#showRev {
+    margin-top: 8%;
 }
 
 .recipeCard {
@@ -46,4 +54,24 @@ body footer {
     position: fixed;
     bottom: 0;
     text-align: center;
+}
+
+.shortReview {
+    width: 500px;
+    height: 500px;
+    overflow: auto;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background-color:aliceblue;
+    border: 5px solid black;
+    margin-left: 50%;
+    margin-top: -600px;
+    z-index: 9999;
+    justify-content: center;
+    text-align: center;
+  }
+
+img + h2 {
+  border: 2px solid lightblue;
+  border-radius: 10px;
 }
