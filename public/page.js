@@ -236,8 +236,6 @@
     document.querySelector("main").appendChild(div);
     let recipeInfo = document.createElement("h4");
     recipeInfo.textContent = "Listed below are some recipes you can make!";
-    let itemPrice = document.createElement("p");
-    let availability = document.createElement('p');
     getItemInfo(name);
     div.appendChild(itemPrice);
     div.appendChild(availability);
@@ -246,6 +244,8 @@
   }
 
   function getItemInfo(name) {
+    let availability = document.createElement('p');
+    let itemPrice = document.createElement("p");
     let bodyData = new FormData();
     bodyData.append("item", name);
     fetch("/getItemInfo", {method: "POST", body: bodyData})
@@ -264,7 +264,7 @@
       });
   }
 
-  function getRecipes(name) {
+  function getRecipes(name, div) {
     let bodyData = new FormData();
     bodyData.append("item", name);
     fetch("/getRecipes", {method: "POST", body: bodyData})

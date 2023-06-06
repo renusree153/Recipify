@@ -20,8 +20,7 @@
           img.src = "/images/items/" + resObj.name + ".jpg";
           img.class = "imgSize";
           newDiv.id = "purchaseDiv";
-          let itemDes = document.createElement("p");
-          itemDes.textContent = "Item name is: " + resObj.name;
+          let itemDes = document.createElement("p").textContent = "Item name is: " + resObj.name;
           let purchaseId = document.createElement("p");
           purchaseId.textContent = "The purchase ID of this order is: " + resObj.id;
           purchaseId.id = "purchaseID";
