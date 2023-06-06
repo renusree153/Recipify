@@ -1,5 +1,5 @@
 /**
- * * Name: Renusree Chittella & Theodore Sakamoto
+ * Name: Renusree Chittella & Theodore Sakamoto
  * Date: June 6th 2023
  * This is out app.js file which contains server side code
  * for making requests to different endpoints to query our
