@@ -1,6 +1,6 @@
 'use strict';
 
-const { stat } = require("fs");
+//const { stat } = require("fs");
 
 (function() {
   window.addEventListener("load", init);

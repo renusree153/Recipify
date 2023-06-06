@@ -138,3 +138,7 @@
   align-items: center;
   padding: 10pt;
 }
+
+#noStock {
+  font-size: 30px;
+}
