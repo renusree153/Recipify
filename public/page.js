@@ -8,11 +8,10 @@
   const NONVEGAN = ["Chicken", "Eggs", "Milk"];
   const NONVEGETARIAN = ["Chicken"];
 
-  let cartList = {};
-
   window.addEventListener('load', init);
 
   function init() {
+
     fetch("/getFoodItems")
       .then(res => res.json())
       .then(res => {
@@ -20,7 +19,6 @@
           createCard(res[i]);
         }
       })
-    //ITEMS.forEach(createCard);
     document.getElementById("switchView").addEventListener("click", function() {
       document.getElementById("grocery-board").classList.toggle("grid-view");
       document.getElementById("grocery-board").classList.toggle("list-view");

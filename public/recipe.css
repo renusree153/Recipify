@@ -71,7 +71,7 @@ body footer {
     text-align: center;
   }
 
-  img + h2 {
-    border: 2px solid lightblue;
-    border-radius: 10px;
-  }
+img + h2 {
+  border: 2px solid lightblue;
+  border-radius: 10px;
+}

@@ -2,8 +2,7 @@
 (function() {
     window.addEventListener("load", init);
     function init() {
-        //document.getElementById("showRevPadThai").addEventListener("click", showRev);
-        //document.getElementById("goBackRecipes").addEventListener("click", showRev);
+        setUsername();
         document.getElementById("submitBtn").addEventListener("click", submitFunc);
         let map = {}
     }
@@ -12,6 +11,7 @@
         let username = document.getElementById("username").value;
         let password = document.getElementById("password").value;
         let bodyData = new FormData();
+        localStorage.setItem("username", username);
         bodyData.append("username", username);
         bodyData.append("password", password);
         fetch("/checkUser", {method: "POST", body: bodyData})
@@ -26,6 +26,12 @@
             .catch(err => {
                 console.error(err);
             })
+    }
+    function setUsername() {
+      let username = localStorage.getItem("username");
+      if (username) {
+        document.getElementById("username").value = username;
+      }
     }
 
     async function statusCheck(response) {
