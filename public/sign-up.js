@@ -11,6 +11,7 @@
     let bodyData = new FormData();
     bodyData.append("username", username);
     bodyData.append("password", password);
+    bodyData.append("email", email);
     fetch("/addUser", {
       method: "POST",
       body: bodyData

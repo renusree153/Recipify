@@ -1,10 +1,10 @@
-/** 
-* Name: Renusree Chittella & Theodore Sakamoto
-* Date: June 6th 2023
-* This is the index.js file which contains the logic behind retrieving
-* the username from past login sessions, and logging in the user
-* given that they have provided the correct username and password.
-*/
+/**
+ * Name: Renusree Chittella & Theodore Sakamoto
+ * Date: June 6th 2023
+ * This is the index.js file which contains the logic behind retrieving
+ * the username from past login sessions, and logging in the user
+ * given that they have provided the correct username and password.
+ */
 
 'use strict';
 (function() {
@@ -50,7 +50,7 @@
         handleError(err);
       });
   }
-  
+
   /**
    * This is my setUsername function which retrieves the value
    * of the last user who signed in from local storage and
@@ -67,10 +67,10 @@
    * This is my statusCheck function which checks
    * whether or not the response from the endpoint
    * was successful or not.
-   * @param {response} - response takes in response
+   * @param {response} response takes in response
    * as a parameter which is the status code received
    * from the fetch request and checks if it is valid or not
-   * @returns {response} - response - returns a response
+   * @returns {response} response - returns a response
    * object that shows whether the fetch was successful or not.
    */
   async function statusCheck(response) {
@@ -85,7 +85,7 @@
    * the error message receivd from the fetch call and
    * append a paragraph onto the webpage stating that
    * there was an error.
-   * @param {err} - err takes in an error object
+   * @param {err} err  - takes in an error object
    * that is retrived from the fetch call.
    */
   function handleError(err) {

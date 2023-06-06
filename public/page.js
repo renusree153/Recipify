@@ -2,6 +2,8 @@
 
 (function() {
 
+  const LESSTHAN3 = 3;
+  const LESSTHAN5 = 5;
   window.addEventListener('load', init);
 
   function init() {
@@ -28,10 +30,10 @@
       filter("vegetarian");
     });
     document.getElementById("lessThan3").addEventListener("click", function() {
-      filterPrice(3);
+      filterPrice(LESSTHAN3);
     });
     document.getElementById("lessThan5").addEventListener('click', function() {
-      filterPrice(5);
+      filterPrice(LESSTHAN5);
     });
     document.getElementById('all').addEventListener('click', function() {
       getConfirmation(true, null);

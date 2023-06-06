@@ -1,23 +1,22 @@
 "use strict";
 
-(function () {
+(function() {
   window.addEventListener("load", init);
   function init() {
     retrieveRecipes();
-    document.querySelectorAll(".submitRating").forEach(function (element) {
-      element.addEventListener("click", function (event) {
-        console.log(event.target.closest(".recipeCard"));
+    document.querySelectorAll(".submitRating").forEach(function(element) {
+      element.addEventListener("click", function(event) {
         let rating = document.querySelector('input[name="rating"]:checked').value;
       });
     });
-    document.querySelectorAll(".reviewBtn").forEach(function (element) {
-      element.addEventListener("click", function (event) {
+    document.querySelectorAll(".reviewBtn").forEach(function(element) {
+      element.addEventListener("click", function(event) {
         let name = event.target.closest(".recipeCard").querySelector("h2").textContent;
         name = name.toLowerCase();
         createRecipeCard(name);
       })
     });
-  }
+  };
   function retrieveRecipes() {
     fetch("/allRecipes")
       .then(res => res.json())
@@ -49,7 +48,7 @@
           let btn1 = document.createElement("button");
           btn1.id = "submitRtg"
           btn1.textContent = "Submit Rating";
-          btn1.addEventListener("click", function (event) {
+          btn1.addEventListener("click", function() {
             let rating = document.querySelector('input[name="rating"]:checked').value;
             console.log(rating);
             let bodyData = new FormData();
@@ -58,11 +57,11 @@
             fetch("/insertRating", {method: "POST", body: bodyData})
               .then(res => res.json())
               .then(res => console.log(res));
-            });
-            let avgRating = document.createElement("p");
-            let bodyData = new FormData();
-            bodyData.append("recipe", recipe.name);
-            fetch("/getAvgRating", {method: "POST", body: bodyData})
+          });
+          let avgRating = document.createElement("p");
+          let bodyData = new FormData();
+          bodyData.append("recipe", recipe.name);
+          fetch("/getAvgRating", {method: "POST", body: bodyData})
             .then(res => res.json())
             .then(res => {
               console.log(res);
@@ -74,21 +73,21 @@
                 console.log()
                 avgRate += rating;
                 console.log(rating);
-              })
-              avgRating.textContent = "Average Rating is: " + (avgRate/count).toFixed(1) + "/5";
+              });
+              avgRating.textContent = "Average Rating is: " + (avgRate / count).toFixed(1) + "/5";
               recipeCard.appendChild(avgRating);
             });
-            recipeCard.appendChild(btn1);
-            let btn2 = document.createElement("button");
-            btn2.id = "showRev";
-            btn2.textContent = "Show Reviews";
-            btn2.addEventListener("click", function (event) {
-              createRecipeCard(recipeName.textContent);
-            })
-            recipeCard.appendChild(btn2);
-            document.getElementById("recipes").appendChild(recipeCard);
+          recipeCard.appendChild(btn1);
+          let btn2 = document.createElement("button");
+          btn2.id = "showRev";
+          btn2.textContent = "Show Reviews";
+          btn2.addEventListener("click", function (event) {
+            createRecipeCard(recipeName.textContent);
           })
+          recipeCard.appendChild(btn2);
+          document.getElementById("recipes").appendChild(recipeCard);
         });
+      });
     }
     function createRecipeCard(name) {
       console.log("here in create recipe card");
