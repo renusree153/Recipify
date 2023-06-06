@@ -1,3 +1,12 @@
+/**
+ * Name: Renusree Chittella & Theodore Sakamoto
+ * Date: June 6th 2023
+ * This is out app.js file which contains server side code
+ * for making requests to different endpoints to query our
+ * database and retrieve information about recipes, groceries,
+ * and the reviews and ratings for each recipe.
+ */
+
 "use strict";
 
 const sqlite3 = require("sqlite3");
@@ -6,11 +15,20 @@ const app = express();
 
 const sqlite = require("sqlite");
 const multer = require("multer");
+const SERVER_STATUS = 500;
+const DEFAULT_PORT = 8000;
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(multer().none());
 
+/**
+ * This is our getDBConnection function which establishes
+ * a connection with our SQL database in order to query
+ * and retrieve information about it later on.
+ * @returns {db} - db returns a db object which
+ * represents the database that is going to be queried.
+ */
 async function getDBConnection() {
   const db = await sqlite.open({
     filename: 'website.db',
@@ -19,8 +37,15 @@ async function getDBConnection() {
   return db;
 }
 
+/**
+ * This is our /checkUser endpoint which takes in two
+ * body parameters from the POST request, username and password
+ * and then retrieves the user whose credentials match those
+ * that are passed in. If there is an error on the server
+ * side an error is thrown and the status is set to 500.
+ */
 app.post("/checkUser", async (req, res) => {
-  try{
+  try {
     let db = await getDBConnection();
     let user = req.body.username;
     let pass = req.body.password;
@@ -29,30 +54,45 @@ app.post("/checkUser", async (req, res) => {
     db.close();
     res.json(results);
   } catch (error) {
-    res.status(500).send("Server error");
+    res.status(SERVER_STATUS).send("Server error");
   }
 });
 
+/**
+ * This is our /addUser endpoint which takes in the
+ * username and password from the request body and
+ * adds the given user's credentials into the database.
+ * If the username already exists in the database, an error
+ * is thrown and an error is also thrown if there is an
+ * issue with the server side.
+ */
 app.post('/addUser', async (req, res) => {
   try {
-  let user = req.body.username;
-  let pass = req.body.password;
-  let email = req.body.email;
-  let db = await getDBConnection();
-  let existingUser = await db.get('SELECT * FROM users WHERE username = ?', [user]);
-  if (existingUser) {
-    res.json({error: "Username already exists"});
-  }
-  const query2 = "INSERT INTO users (username, password, email)" +
+    let user = req.body.username;
+    let pass = req.body.password;
+    let email = req.body.email;
+    let db = await getDBConnection();
+    let existingUser = await db.get('SELECT * FROM users WHERE username = ?', [user]);
+    if (existingUser) {
+      res.json({error: "Username already exists"});
+    }
+    const query2 = "INSERT INTO users (username, password, email)" +
     " VALUES (?, ?, ?)";
     db.run(query2, [user, pass, email]);
     let users = await db.all("SELECT * FROM users");
     db.close();
     res.json(users);
   } catch (err) {
-    res.status(500).send("Server error");
+    res.status(SERVER_STATUS).send("Server error");
   }
 });
+
+/**
+ * This is our /getFoodItems endpoint which
+ * retrieves all the groceries from our database
+ * and then returns them to the user. If there is an
+ * error on the server side, an error is thrown.
+ */
 
 app.get("/getFoodItems", async (req, res) => {
   try {
@@ -62,10 +102,18 @@ app.get("/getFoodItems", async (req, res) => {
     db.close();
     res.json(results);
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
+/**
+ * This is our /getRecipes endpoint which gets the
+ * grocery item's name from the request body's parameter
+ * and retreives all the recipes that can be made with
+ * the given grocery item back to the user. If
+ * there is an error on the server side, an error
+ * message is displayed to the user.
+ */
 app.post("/getRecipes", async (req, res) => {
   try {
     let groceryItem = req.body.item;
@@ -75,11 +123,18 @@ app.post("/getRecipes", async (req, res) => {
     db.close();
     res.json(results);
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
-app.post("/insertRating", async(req, res) => {
+/**
+ * This is our /insertRating endpoint which retrives
+ * the recipeName and ratingData from the user and inserts
+ * these values into the ratings table in our database.
+ * If there is an error on the server side, an error
+ * message is displayed to the user.
+ */
+app.post("/insertRating", async (req, res) => {
   try {
     let recipeName = req.body.name;
     let ratingData = req.body.rate;
@@ -89,23 +144,38 @@ app.post("/insertRating", async(req, res) => {
     db.close();
     res.json({msg: result});
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
+/**
+ * This is our /getAvgRating endpoint which gets the
+ * recipe name from the user's POST request and retrieves
+ * the rating values for the given recipe. If there is an error
+ * on the server side, an error
+ * message is displayed to the user.
+ */
 app.post("/getAvgRating", async (req, res) => {
   try {
     let item = req.body.recipe;
     let db = await getDBConnection();
-    let query = "SELECT rating FROM ratings WHERE name = ?"
+    let query = "SELECT rating FROM ratings WHERE name = ?";
     let results = await db.all(query, [item]);
     db.close();
     res.json(results);
-  } catch(err) {
-    res.status(500).send("Server error, please try again later");
+  } catch (err) {
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
+/**
+ * This is our /getItemInfo endpoint which gets the item's
+ * name from the user's POST request and retrieves all the
+ * groceries where the name of the item is equal to
+ * what the user passed in. If there is an error
+ * on the server side, an error
+ * message is displayed to the user.
+ */
 app.post('/getItemInfo', async (req, res) => {
   try {
     let db = await getDBConnection();
@@ -114,11 +184,18 @@ app.post('/getItemInfo', async (req, res) => {
     let results = await db.all(query, [item]);
     db.close();
     res.json(results);
-  } catch(err) {
-    res.status(500).send("Server error, please try again later");
+  } catch (err) {
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
+/**
+ * This is our /getPrice endpoint which gets the item's
+ * name from the user's POST request and displays the price
+ * of the given item's name.If there is an error
+ * on the server side, an error
+ * message is displayed to the user.
+ */
 app.post("/getPrice", async (req, res) => {
   try {
     let db = await getDBConnection();
@@ -127,22 +204,19 @@ app.post("/getPrice", async (req, res) => {
     let results = await db.all(query, [item]);
     db.close();
     res.json(results);
-  } catch(err) {
-    res.status(500).send("Server error, please try again later");
+  } catch (err) {
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
-app.post("/getRating", async (req, res) => {
-  try {
-    let db = await getDBConnection();
-    let item = req.body.item;
-    let query = "SELECT average FROM ratings WHERE name = ?";
-    let results = await db.all(query, [item]);
-    db.close();
-  } catch(err) {
-    res.status(500).send("Server error, please try again later");
-  }
-});
+/**
+ * This is our /addToCart endpoint which retrieves the
+ * item's name and id from the user's POST request
+ * and inserts into the cart table the given item name
+ * and id. If there is an error
+ * on the server side, an error
+ * message is displayed to the user.
+ */
 
 app.post('/addToCart', async (req, res) => {
   try {
@@ -155,46 +229,69 @@ app.post('/addToCart', async (req, res) => {
     res.type('text');
     res.send(id.toString());
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
-})
+});
 
 app.post('/checkCart', async (req, res) => {
   try {
     let user = req.body.user;
     let db = await getDBConnection();
-    let query = "SELECT * FROM cart WHERE user = ?"
+    let query = "SELECT * FROM cart WHERE user = ?";
     let cartInfo = await db.all(query, [user]);
     db.close();
     res.json(cartInfo);
-  } catch(err) {
-    res.status(500).send("Server error, please try again later");
+  } catch (err) {
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
-})
+});
 
-app.post("/getReviews", async(req, res) => {
+/**
+ * This is our /getReviews endpoint which retrives
+ * the recipe's name from the user's POST request body
+ * and returns the review for the given recipe back
+ * to the user. If there is an error
+ * on the server side, an error
+ * message is displayed to the user.
+ */
+app.post("/getReviews", async (req, res) => {
   try {
     let db = await getDBConnection();
     let name = req.body.item;
-    let query = "SELECT * FROM review WHERE recipe = ?"
+    let query = "SELECT * FROM review WHERE recipe = ?";
     let results = await db.all(query, [name]);
     db.close();
     res.json(results);
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
-app.get("/allRecipes", async(req, res) => {
+/**
+ * This is our /allRecipes endpoint which
+ * returns all distinct recipe names that are
+ * present in the database. If there is an error
+ * on the server side, an error
+ * message is displayed to the user.
+ */
+app.get("/allRecipes", async (req, res) => {
   try {
     let db = await getDBConnection();
-    let recipes = await db.all ("SELECT DISTINCT name FROM ratings");
+    let recipes = await db.all("SELECT DISTINCT name FROM ratings");
     res.json(recipes);
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
+/**
+ * This is our /addReview endpoint which retrieves
+ * the recipe name, review, and rating from the user's
+ * POST request body and inserts that into the reviews table
+ * for the given recipe. If there is an error
+ * on the server side, an error
+ * message is displayed to the user.
+ */
 app.post('/addReview', async (req, res) => {
   try {
     let recipeName = req.body.recipe;
@@ -207,11 +304,18 @@ app.post('/addReview', async (req, res) => {
     let users = await db.all("SELECT * FROM review");
     db.close();
     res.json(users);
-  } catch(err) {
-    res.status(500).send("Server error, please try again later");
+  } catch (err) {
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
+/**
+ * This is our /purchase endpoint which
+ * takes an item from the cart and adds it
+ * onto the purchased list of items. If there is an error
+ * on the server side, an error
+ * message is displayed to the user.
+ */
 app.post('/purchase', async (req, res) => {
   try {
     let id = parseInt(req.body.id);
@@ -222,8 +326,8 @@ app.post('/purchase', async (req, res) => {
     let query2 = "INSERT INTO purchases (user, name) VALUES (?, ?)";
     db.run(query2, [itemInfo.user, itemInfo.name]);
     db.close();
-  } catch(err) {
-    res.status(500).send("Server error, please try again later");
+  } catch (err) {
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -296,29 +400,53 @@ app.post('/checkAvailable', async (req, res) => {
   }
 })
 
+/**
+ * This is our /remove endpoint which
+ * removes a given recipe of retrieved id
+ * from the carts table. If there is an error
+ * on the server side, an error
+ * message is displayed to the user.
+ */
 app.post('/remove', async (req, res) => {
   try {
     let id = parseInt(req.body.id);
     let db = await getDBConnection();
     db.run("DELETE FROM cart WHERE id = ?", [id]);
     db.close();
-  } catch(err) {
-    res.status(500).send("Server error, please try again later");
+  } catch (err) {
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
+/**
+ * This is our /checkout endpoint which retrieves
+ * the user's name from the user's POST body request
+ * and then gets all items from the cart where the user's
+ * name is equal to the given user. If there is an error
+ * on the server side, an error
+ * message is displayed to the user.
+ */
 app.post('/checkout', async (req, res) => {
   try {
     let user = req.body.user;
     let query = "SELECT * FROM cart WHERE user = ?";
     let db = await getDBConnection();
-    let all = await db.all(query);
+    let all = await db.all(query, [user]);
+    res.json(all);
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
-app.post("/getPurchases", async(req, res) => {
+/**
+ * This is our /getPurchases endpoint which gets the
+ * user's name through the user's POST request body and
+ * returns the corresponding purchases that the user has made
+ * in the past. If there is an error
+ * on the server side, an error
+ * message is displayed to the user.
+ */
+app.post("/getPurchases", async (req, res) => {
   let userName = req.body.name;
   let db = await getDBConnection();
     //let query = "SELECT * FROM purchases WHERE user = ?";
@@ -329,8 +457,6 @@ app.post("/getPurchases", async(req, res) => {
   res.json(all);
 });
 
-//change review to not have ratings column
-
 app.use(express.static("public"));
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || DEFAULT_PORT;
 app.listen(PORT);
