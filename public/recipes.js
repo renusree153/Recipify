@@ -106,14 +106,12 @@
                     p.textContent = reviewText;
                     div.insertBefore(p, button);
                     let bodyData = new FormData();
-                    bodyData.append("recipe", res.recipe);
-                    bodyData.append("review", p);
+                    bodyData.append("recipe", name);
+                    bodyData.append("review", p.textContent);
+                    bodyData.append("rating", 5);
                     fetch("/addReview", {
                         method: "POST",
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(bodyData)
+                        body: (bodyData)
                     })
                     .then(res => res.json())
                     .then(res => console.log(res))

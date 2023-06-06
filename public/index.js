@@ -4,10 +4,8 @@
     function init() {
         setUsername();
         document.getElementById("submitBtn").addEventListener("click", submitFunc);
-        let map = {}
     }
     function submitFunc() {
-        console.log("in submit func");
         let username = document.getElementById("username").value;
         let password = document.getElementById("password").value;
         let bodyData = new FormData();
