@@ -134,12 +134,12 @@
     div.append(btn, btn2);
   }
 
-  function purchase(id) {
+  async function purchase(id) {
     let bodyData = new FormData();
     bodyData.append("id", id);
     let response = await fetch('checkAvailable', {method: 'post', body:bodyData});
     let data = await response.json();
-    inStock = data;
+    let inStock = data;
     if (inStock) {
       fetch('/checkCart', {method: "post", body:bodyData})
         .then(res => res.json())

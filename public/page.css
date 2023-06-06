@@ -43,7 +43,7 @@
   height: 200px;
   border: 0.35em solid black;
   border-radius: 1px;
-  margin: 5px;
+  margin: 20px;
 }
 
 #nameItem {
@@ -69,6 +69,7 @@
 #grocery-board.list-view div {
   width: 200px;
   height: 250px;
+  padding: 40px;
   border: 0.35em solid black;
   border-radius: 1px;
   margin: 5px;
