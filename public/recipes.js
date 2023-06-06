@@ -81,7 +81,8 @@
         fetch("/getReviews", {method: "POST", body: bodyData})
           .then(res => res.json())
           .then(res => {
-            res.forEach(review => {
+            res.forEach((review) => {
+                console.log(review.comment);
                 let newRev = document.createElement("p");
                 newRev.textContent = "-" +review.comment;
                 div.appendChild(newRev);
@@ -105,8 +106,8 @@
                     p.textContent = reviewText;
                     div.insertBefore(p, button);
                     let bodyData = new FormData();
-                    bodyData.append("recipeName", review.recipe);
-                    bodyData.append("reviewName", p);
+                    bodyData.append("recipe", res.recipe);
+                    bodyData.append("review", p);
                     fetch("/addReview", {
                         method: "POST",
                         headers: {
@@ -122,7 +123,7 @@
           })
           .catch(err => {
             console.error("Error retrieving dat ", err);
-          }) 
+          })
     }
 
     function avgRating() {
@@ -130,12 +131,12 @@
     }
 })();
 
-/** 
+/**
 fetch( endpoint for all recipes )
         .then(resp => resp.json())
         .then(resp => {
             createRecipeCard(resp);
-            
+
         });
 
         */

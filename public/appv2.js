@@ -37,16 +37,10 @@ app.post("/checkUser", async (req, res) => {
 app.post('/addUser', async (req, res) => {
     let user = req.body.username;
     let pass = req.body.password;
-    console.log(user);
-    console.log(pass);
     let db = await getDBConnection();
-    let existingUser = await db.get('SELECT * FROM users WHERE username = ?', [user]);
-    if (existingUser) {
-        res.json({error: "Username already exists"});
-    }
-    const query2 = "INSERT INTO users (username, password)" +
+    const query = "INSERT INTO users (username, password)" +
       " VALUES (?, ?)";
-    db.run(query2, [user, pass]);
+    db.run(query, [user, pass]);
     let users = await db.all("SELECT * FROM users");
     db.close();
     res.json(users);
@@ -116,10 +110,8 @@ app.post('/addToCart', async (req, res) => {
     let user = req.body.id;
     let db = await getDBConnection();
     let query = "INSERT INTO cart (user, name) VALUES (?, ?)";
-    let id = (await db.run(query, [user, item])).lastID;
+    db.run(query, [user, item]);
     db.close();
-    res.type('text');
-    res.send(id.toString());
 })
 
 app.post('/checkCart', async (req, res) => {
@@ -131,67 +123,6 @@ app.post('/checkCart', async (req, res) => {
     res.json(cartInfo);
 })
 
-app.post("/getReviews", async(req, res) => {
-    try {
-        let db = await getDBConnection();
-        let name = req.body.item;
-        let query = "SELECT * FROM review WHERE recipe = ?"
-        let results = await db.all(query, [name]);
-        db.close();
-        res.json(results);
-    } catch (err) {
-        console.error(err);
-    }
-
-})
-
-app.get("/allRecipes", async(req, res) => {
-    let db = await getDBConnection();
-    let recipes = await db.all ("SELECT name FROM ratings");
-    res.json(recipes);
-})
-
-app.post('/addReview', async (req, res) => {
-    let recipeName = req.body.recipe;
-    let reviewName = req.body.review;
-    console.log(recipeName, reviewName);
-    let db = await getDBConnection();
-    const query = "INSERT INTO review (comment, recipe, rating)" +
-      " VALUES (?, ?, ?)";
-    db.run(query, [recipeName, reviewName, 5]);
-    let users = await db.all("SELECT * FROM review");
-    db.close();
-    res.json(users);
-})
-
-app.post('/purchase', async (req, res) => {
-    let id = parseInt(req.body.id);
-    let db = await getDBConnection();
-    let query = "SELECT * FROM cart WHERE id = ?";
-    let itemInfo = (await db.all(query, [id]))[0];
-    console.log(itemInfo.user);
-    db.run("DELETE FROM cart WHERE id = ?", [id]);
-    let query2 = "INSERT INTO purchases (user, name) VALUES (?, ?)"
-    db.run(query2, [itemInfo.user, itemInfo.name]);
-    db.close();
-})
-
-app.post('/remove', async (req, res) => {
-    let id = parseInt(req.body.id);
-    let db = await getDBConnection();
-    db.run("DELETE FROM cart WHERE id = ?", [id]);
-    db.close();
-})
-
-app.post('/checkout', async (req, res) => {
-    let user = req.body.user;
-    let query = "SELECT * FROM cart WHERE user = ?";
-    let db = await getDBConnection();
-    let all = await db.all(query);
-
-})
-
-//change review to not have ratings column
 
 app.use(express.static("public"));
 const PORT = process.env.PORT || 8000;

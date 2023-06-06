@@ -32,6 +32,15 @@
 
     document.getElementById('reset').addEventListener('click', reset);
     document.getElementById('cart').addEventListener('click', toggleView);
+    let bodyData = new FormData();
+    bodyData.append('user', window.localStorage.getItem('user'));
+    fetch('/checkCart', {method:'post', body:bodyData})
+      .then(res => res.json())
+      .then(function(res) {
+        res.forEach(function(item) {
+          createCartCard(item.name, "images/items/"+item.name+".jpg", item.id);
+        })
+      })
   }
 
   function createCard(card) {
@@ -65,6 +74,11 @@
       bodyData.append("item", item);
       bodyData.append('id', user);
       fetch('/addToCart', {method: 'POST', body: bodyData})
+        .then(res => res.json())
+        .then(function(res) {
+          let id = res;
+          createCartCard(item, "images/items/"+item+".jpg", id);
+        })
         .catch(console.error);
     })
     btn2.addEventListener("click", function() {
@@ -79,8 +93,9 @@
     document.getElementById('grocery-board').appendChild(div);
   }
 
-  function createCartCard(item, img) {
+  function createCartCard(item, img, id) {
     let div = document.createElement("div");
+    div.id = id;
     let p = document.createElement("p");
     p.id = "nameItem";
     let price = document.createElement("p");
@@ -93,6 +108,31 @@
     div.appendChild(p);
     document.querySelector("main").appendChild(div);
     document.getElementById("cart-page").appendChild(div);
+    let btn = document.createElement('button');
+    let btn2 = document.createElement('button');
+    btn.textContent = "Purchase";
+    btn2.textContent = "Remove";
+    btn.addEventListener('click', function() {
+      purchase(id);
+    });
+    btn2.addEventListener('click', function() {
+      removeCart(id);
+    });
+    div.append(btn, btn2);
+  }
+
+  function purchase(id) {
+    let bodyData = new FormData();
+    bodyData.append("id", id);
+    fetch('/purchase', {method: "post", body: bodyData}).catch(console.error);
+    document.getElementById(id).remove();
+  }
+
+  function removeCart(id) {
+    let bodyData = new FormData();
+    bodyData.append("id", id);
+    fetch('/remove', {method: "post", body: bodyData}).catch(console.error);
+    document.getElementById(id).remove();
   }
 
   function createRecipeCard(name) {
