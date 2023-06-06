@@ -30,37 +30,37 @@
     });
     document.getElementById('reset').addEventListener('click', reset);
     document.getElementById('cart').addEventListener('click', toggleView);
-    let bodyData = new FormData();
-    bodyData.append('user', window.localStorage.getItem('user'));
     checkCart();
   }
 
   function getFoodItems() {
     fetch("/getFoodItems")
-    .then(statusCheck)
-    .then(res => res.json())
-    .then(res => {
-      for (let i = 0; i < res.length; i++) {
-        createCard(res[i]);
-      }
-    })
-    .catch(err => {
-      handleError(err);
-    });
+      .then(statusCheck)
+      .then(res => res.json())
+      .then(res => {
+        for (let i = 0; i < res.length; i++) {
+          createCard(res[i]);
+        }
+      })
+      .catch(err => {
+        handleError(err);
+      });
   }
 
   function checkCart() {
+    let bodyData = new FormData();
+    bodyData.append('user', window.localStorage.getItem('user'));
     fetch('/checkCart', {method: 'post', body: bodyData})
-    .then(statusCheck)
-    .then(res => res.json())
-    .then(function(res) {
-      res.forEach(function(item) {
-        createCartCard(item.name, "images/items/" + item.name + ".jpg", item.id);
+      .then(statusCheck)
+      .then(res => res.json())
+      .then(function(res) {
+        res.forEach(function(item) {
+          createCartCard(item.name, "images/items/" + item.name + ".jpg", item.id);
+        });
+      })
+      .catch(err => {
+        handleError(err);
       });
-    })
-    .catch(err => {
-      handleError(err);
-    });
   }
 
   function createCard(card) {
@@ -74,6 +74,21 @@
     p1.textContent = card.name;
     let p2 = document.createElement('p');
     p2.textContent = card.price;
+    checkStatus(card, desc, div);
+    let btn = document.createElement('button');
+    let btn2 = document.createElement("button");
+    btn.textContent = "ADD TO CART";
+    btn2.textContent = "VIEW INFORMATION/RECIPES";
+    btn2.id = "infoBtn";
+    btnFunc(card, item, user);
+    btn2.addEventListener("click", function() {
+      createRecipeCard(card.name);
+    });
+    appendChildren(img, p1, p2, desc, btn, btn2);
+    document.getElementById('grocery-board').appendChild(div);
+  }
+
+  function checkStatus(card, desc, div) {
     if (card.vegan === 1) {
       desc.textContent += "VEGAN ";
       div.classList.add('vegan');
@@ -82,11 +97,9 @@
       desc.textContent += "VEGETARIAN ";
       div.classList.add('vegetarian');
     }
-    let btn = document.createElement('button');
-    let btn2 = document.createElement("button");
-    btn.textContent = "ADD TO CART";
-    btn2.textContent = "VIEW INFORMATION/RECIPES";
-    btn2.id = "infoBtn";
+  }
+
+  function btnFunc(card, item, user) {
     btn.addEventListener('click', function() {
       let item = card.name;
       let user = window.localStorage.getItem('user');
@@ -95,13 +108,17 @@
       bodyData.append('id', user);
       addCart();
     });
-    btn2.addEventListener("click", function() {
-      createRecipeCard(card.name);
-    });
-    div.appendChild(img).appendChild(p1).appendChild(p2).appendChild(desc).appendChild(btn).appendChild(btn2);
-    document.getElementById('grocery-board').appendChild(div);
   }
-
+  
+  function appendChildren(img, p1, p2, desc, btn, btn2) {
+    div.appendChild(img);
+    div.appendChild(p1);
+    div.appendChild(p2);
+    div.appendChild(desc);
+    div.appendChild(btn);
+    div.appendChild(btn2);
+  }
+  
   function addCart() {
     fetch('/addToCart', {method: 'POST', body: bodyData})
     .then(statusCheck)
