@@ -1,7 +1,5 @@
 'use strict';
 
-const { stat } = require("fs");
-
 (function() {
   window.addEventListener("load", init);
   function init() {
@@ -23,32 +21,32 @@ const { stat } = require("fs");
           window.location.href = "page.html";
           window.localStorage.setItem('user', username);
         } else {
-          let showMsg = document.getElementById("creds").classList.remove("hidden");
+          document.getElementById("creds").classList.remove("hidden");
         }
       })
       .catch(err => {
         handleError(err);
-      })
-    }
+      });
+  }
 
-    function setUsername() {
-      let username = localStorage.getItem("username");
-      if (username) {
-        document.getElementById("username").value = username;
-      }
+  function setUsername() {
+    let username = localStorage.getItem("username");
+    if (username) {
+      document.getElementById("username").value = username;
     }
+  }
 
-    async function statusCheck(response) {
-      if(!response.ok) {
-        throw new Error(await response.text());
-      }
-      return response;
+  async function statusCheck(response) {
+    if(!response.ok) {
+      throw new Error(await response.text());
     }
+    return response;
+  }
 
-    function handleError(err) {
-      let p1 = document.createElement("p");
-      p1.textContent = "There has been an error retrieving your data. Please try again" +
+  function handleError(err) {
+    let p1 = document.createElement("p");
+    p1.textContent = "There has been an error retrieving your data. Please try again" +
       "Here is the error: " + err;
-      document.getElementById("main").appendChild(p1);
-    }
+    document.getElementById("main").appendChild(p1);
+  }
 })();

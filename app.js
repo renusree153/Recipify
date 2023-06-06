@@ -20,7 +20,7 @@ async function getDBConnection() {
 }
 
 app.post("/checkUser", async (req, res) => {
-  try{
+  try {
     let db = await getDBConnection();
     let user = req.body.username;
     let pass = req.body.password;
@@ -35,14 +35,14 @@ app.post("/checkUser", async (req, res) => {
 
 app.post('/addUser', async (req, res) => {
   try {
-  let user = req.body.username;
-  let pass = req.body.password;
-  let db = await getDBConnection();
-  let existingUser = await db.get('SELECT * FROM users WHERE username = ?', [user]);
-  if (existingUser) {
-    res.json({error: "Username already exists"});
-  }
-  const query2 = "INSERT INTO users (username, password)" +
+    let user = req.body.username;
+    let pass = req.body.password;
+    let db = await getDBConnection();
+    let existingUser = await db.get('SELECT * FROM users WHERE username = ?', [user]);
+    if (existingUser) {
+      res.json({error: "Username already exists"});
+    }
+    const query2 = "INSERT INTO users (username, password)" +
     " VALUES (?, ?)";
     db.run(query2, [user, pass]);
     let users = await db.all("SELECT * FROM users");
@@ -82,7 +82,7 @@ app.post("/getRecipes", async (req, res) => {
   }
 });
 
-app.post("/insertRating", async(req, res) => {
+app.post("/insertRating", async (req, res) => {
   try {
     let recipeName = req.body.name;
     let ratingData = req.body.rate;
@@ -104,7 +104,7 @@ app.post("/getAvgRating", async (req, res) => {
     let results = await db.all(query, [item]);
     db.close();
     res.json(results);
-  } catch(err) {
+  } catch (err) {
     res.status(500).send("Server error, please try again later");
   }
 });
@@ -120,7 +120,7 @@ app.post('/getItemInfo', async (req, res) => {
   } catch(err) {
     res.status(500).send("Server error, please try again later");
   }
-})
+});
 
 app.post("/getPrice", async (req, res) => {
   try {
@@ -133,7 +133,7 @@ app.post("/getPrice", async (req, res) => {
   } catch(err) {
     res.status(500).send("Server error, please try again later");
   }
-})
+});
 
 app.post("/getRating", async (req, res) => {
   try {
@@ -158,7 +158,7 @@ app.post('/addToCart', async (req, res) => {
     res.type('text');
     res.send(id.toString());
   } catch (err) {
-    res.status(500).send("Server error, please try again later"); 
+    res.status(500).send("Server error, please try again later");
   }
 })
 
@@ -173,9 +173,9 @@ app.post('/checkCart', async (req, res) => {
   } catch(err) {
     res.status(500).send("Server error, please try again later"); 
   }
-})
+});
 
-app.post("/getReviews", async(req, res) => {
+app.post("/getReviews", async (req, res) => {
   try {
     let db = await getDBConnection();
     let name = req.body.item;
@@ -184,14 +184,14 @@ app.post("/getReviews", async(req, res) => {
     db.close();
     res.json(results);
   } catch (err) {
-    res.status(500).send("Server error, please try again later"); 
+    res.status(500).send("Server error, please try again later");
   }
 });
 
-app.get("/allRecipes", async(req, res) => {
+app.get("/allRecipes", async (req, res) => {
   try {
     let db = await getDBConnection();
-    let recipes = await db.all ("SELECT DISTINCT name FROM ratings");
+    let recipes = await db.all("SELECT DISTINCT name FROM ratings");
     res.json(recipes);
   } catch (err) {
     res.status(500).send("Server error, please try again later");
@@ -222,10 +222,10 @@ app.post('/purchase', async (req, res) => {
     let query = "SELECT * FROM cart WHERE id = ?";
     let itemInfo = (await db.all(query, [id]))[0];
     db.run("DELETE FROM cart WHERE id = ?", [id]);
-    let query2 = "INSERT INTO purchases (user, name) VALUES (?, ?)"
+    let query2 = "INSERT INTO purchases (user, name) VALUES (?, ?)";
     db.run(query2, [itemInfo.user, itemInfo.name]);
     db.close();
-  } catch(err) {
+  } catch (err) {
     res.status(500).send("Server error, please try again later");
   }
 });
