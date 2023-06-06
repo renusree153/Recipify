@@ -23,6 +23,13 @@ CREATE TABLE "groceryToRecipe" (
 	FOREIGN KEY("name") REFERENCES "groceries"("name")
 )
 
+CREATE TABLE "purchaseInfo" (
+	"purchaseID"	TEXT NOT NULL UNIQUE,
+	"user"	TEXT NOT NULL,
+	"date"	DATETIME DEFAULT (datetime('now', 'localtime')),
+	PRIMARY KEY("purchaseID")
+)
+
 CREATE TABLE "purchases" (
 	"id"	INTEGER,
 	"user"	TEXT,
@@ -33,9 +40,10 @@ CREATE TABLE "purchases" (
 )
 
 CREATE TABLE "ratings" (
+	"id"	INTEGER,
 	"name"	TEXT NOT NULL,
-	"average"	REAL NOT NULL DEFAULT 5,
-	PRIMARY KEY("name")
+	"rating"	REAL NOT NULL DEFAULT 5,
+	PRIMARY KEY("id" AUTOINCREMENT)
 )
 
 CREATE TABLE "review" (
@@ -48,7 +56,8 @@ CREATE TABLE "review" (
 )
 
 CREATE TABLE "users" (
-	"username"	TEXT NOT NULL UNIQUE,
+	"username"	TEXT NOT NULL,
 	"password"	TEXT NOT NULL,
+	"email"	TEXT NOT NULL,
 	PRIMARY KEY("username")
 )
