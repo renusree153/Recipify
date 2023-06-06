@@ -36,10 +36,10 @@
       })
       .catch(err => {
         handleError(err);
-      })
+      });
   }
   async function statusCheck(response) {
-    if(!response.ok) {
+    if (!response.ok) {
       throw new Error(await response.text());
     }
     return response;

@@ -6,6 +6,7 @@ const app = express();
 
 const sqlite = require("sqlite");
 const multer = require("multer");
+const SERVER_STATUS = 500;
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -29,7 +30,7 @@ app.post("/checkUser", async (req, res) => {
     db.close();
     res.json(results);
   } catch (error) {
-    res.status(500).send("Server error");
+    res.status(SERVER_STATUS).send("Server error");
   }
 });
 
@@ -49,7 +50,7 @@ app.post('/addUser', async (req, res) => {
     db.close();
     res.json(users);
   } catch (err) {
-    res.status(500).send("Server error");
+    res.status(SERVER_STATUS).send("Server error");
   }
 });
 
@@ -65,7 +66,7 @@ app.get("/getFoodItems", async (req, res) => {
     db.close();
     res.json(results);
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -78,7 +79,7 @@ app.post("/getRecipes", async (req, res) => {
     db.close();
     res.json(results);
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -92,7 +93,7 @@ app.post("/insertRating", async (req, res) => {
     db.close();
     res.json({msg: result});
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -100,12 +101,12 @@ app.post("/getAvgRating", async (req, res) => {
   try {
     let item = req.body.recipe;
     let db = await getDBConnection();
-    let query = "SELECT rating FROM ratings WHERE name = ?"
+    let query = "SELECT rating FROM ratings WHERE name = ?";
     let results = await db.all(query, [item]);
     db.close();
     res.json(results);
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -117,8 +118,8 @@ app.post('/getItemInfo', async (req, res) => {
     let results = await db.all(query, [item]);
     db.close();
     res.json(results);
-  } catch(err) {
-    res.status(500).send("Server error, please try again later");
+  } catch (err) {
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -131,7 +132,7 @@ app.post("/getPrice", async (req, res) => {
     db.close();
     res.json(results);
   } catch(err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -142,8 +143,9 @@ app.post("/getRating", async (req, res) => {
     let query = "SELECT average FROM ratings WHERE name = ?";
     let results = await db.all(query, [item]);
     db.close();
+    res.json(results);
   } catch(err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -158,20 +160,20 @@ app.post('/addToCart', async (req, res) => {
     res.type('text');
     res.send(id.toString());
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
-})
+});
 
 app.post('/checkCart', async (req, res) => {
   try {
     let user = req.body.user;
     let db = await getDBConnection();
-    let query = "SELECT * FROM cart WHERE user = ?"
+    let query = "SELECT * FROM cart WHERE user = ?";
     let cartInfo = await db.all(query, [user]);
     db.close();
     res.json(cartInfo);
-  } catch(err) {
-    res.status(500).send("Server error, please try again later"); 
+  } catch (err) {
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -179,12 +181,12 @@ app.post("/getReviews", async (req, res) => {
   try {
     let db = await getDBConnection();
     let name = req.body.item;
-    let query = "SELECT * FROM review WHERE recipe = ?"
+    let query = "SELECT * FROM review WHERE recipe = ?";
     let results = await db.all(query, [name]);
     db.close();
     res.json(results);
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -194,7 +196,7 @@ app.get("/allRecipes", async (req, res) => {
     let recipes = await db.all("SELECT DISTINCT name FROM ratings");
     res.json(recipes);
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -210,8 +212,8 @@ app.post('/addReview', async (req, res) => {
     let users = await db.all("SELECT * FROM review");
     db.close();
     res.json(users);
-  } catch(err) {
-    res.status(500).send("Server error, please try again later");
+  } catch (err) {
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -226,7 +228,7 @@ app.post('/purchase', async (req, res) => {
     db.run(query2, [itemInfo.user, itemInfo.name]);
     db.close();
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -236,8 +238,8 @@ app.post('/remove', async (req, res) => {
     let db = await getDBConnection();
     db.run("DELETE FROM cart WHERE id = ?", [id]);
     db.close();
-  } catch(err) {
-    res.status(500).send("Server error, please try again later");
+  } catch (err) {
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 
@@ -248,7 +250,7 @@ app.post('/checkout', async (req, res) => {
     let db = await getDBConnection();
     let all = await db.all(query);
   } catch (err) {
-    res.status(500).send("Server error, please try again later");
+    res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
 

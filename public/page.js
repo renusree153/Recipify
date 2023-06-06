@@ -17,9 +17,9 @@
         handleError(err);
       });
     document.getElementById("switchView").addEventListener("click", function() {
-    document.getElementById("grocery-board").classList.toggle("grid-view");
-    document.getElementById("grocery-board").classList.toggle("list-view");
-    })
+      document.getElementById("grocery-board").classList.toggle("grid-view");
+      document.getElementById("grocery-board").classList.toggle("list-view");
+    });
     document.getElementById('search-btn').addEventListener('click', search);
     document.getElementById('vegan').addEventListener('click', function() {
       filter("vegan");
@@ -45,7 +45,7 @@
       .then(res => res.json())
       .then(function(res) {
         res.forEach(function(item) {
-          createCartCard(item.name, "images/items/"+item.name +".jpg", item.id);
+          createCartCard(item.name, "images/items/" + item.name + ".jpg", item.id);
         });
       })
       .catch(err => {
@@ -68,8 +68,8 @@
       desc.textContent += "VEGAN ";
       div.classList.add('vegan');
     }
-    if (card.vegetarian == 1) {
-      desc.textContent += "VEGETARIAN "
+    if (card.vegetarian === 1) {
+      desc.textContent += "VEGETARIAN ";
       div.classList.add('vegetarian');
     }
     let btn = document.createElement('button');
@@ -88,7 +88,7 @@
         .then(res => res.json())
         .then(function(res) {
           let id = res;
-          createCartCard(item, "images/items/" + item +".jpg", id);
+          createCartCard(item, "images/items/" + item + ".jpg", id);
         })
         .catch(err => {
           handleError(err);
@@ -266,7 +266,6 @@
 
   function filter(restriction) {
     document.querySelectorAll('#grocery-board div').forEach(function(element) {
-      console.log(element);
       if (element.classList.contains(restriction)) {
         element.style.display = "inline";
       } else {
@@ -301,7 +300,7 @@
   }
 
   async function statusCheck(response) {
-    if(!response.ok) {
+    if (!response.ok) {
       throw new Error(await response.text());
     }
     return response;
