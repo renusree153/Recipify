@@ -80,11 +80,11 @@
     btn.textContent = "ADD TO CART";
     btn2.textContent = "VIEW INFORMATION/RECIPES";
     btn2.id = "infoBtn";
-    btnFunc(card, item, user);
+    btnFunc(btn, card, card.name, window.localStorage.getItem('user'));
     btn2.addEventListener("click", function() {
       createRecipeCard(card.name);
     });
-    appendChildren(img, p1, p2, desc, btn, btn2);
+    appendChildren(div, img, p1, p2, desc, btn, btn2);
     document.getElementById('grocery-board').appendChild(div);
   }
 
@@ -99,18 +99,16 @@
     }
   }
 
-  function btnFunc(card, item, user) {
+  function btnFunc(btn, card, item, user) {
     btn.addEventListener('click', function() {
-      let item = card.name;
-      let user = window.localStorage.getItem('user');
       let bodyData = new FormData();
       bodyData.append("item", item);
       bodyData.append('id', user);
       addCart();
     });
   }
-  
-  function appendChildren(img, p1, p2, desc, btn, btn2) {
+
+  function appendChildren(div, img, p1, p2, desc, btn, btn2) {
     div.appendChild(img);
     div.appendChild(p1);
     div.appendChild(p2);
@@ -118,8 +116,11 @@
     div.appendChild(btn);
     div.appendChild(btn2);
   }
-  
+
   function addCart() {
+    let item = card.name;
+    let bodyData = new FormData();
+    bodyData.append("item", item);
     fetch('/addToCart', {method: 'POST', body: bodyData})
     .then(statusCheck)
     .then(res => res.json())
