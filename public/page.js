@@ -1,9 +1,23 @@
+/**
+ * Name: Renusree Chittella & Theodore Sakamoto
+ * Date: June 6th 2023
+ * This is our page.js file which contains the functionality required
+ * to display the grocery items to our users as well as allow them
+ * to filter down the groceries based on a specific attribute.
+ */
+
 'use strict';
 
 (function() {
-
   window.addEventListener('load', init);
 
+  /**
+   * This is our init function which makes a fetch request to the
+   * /getFoodItems API in order to retrieve all the different grocery
+   * items and create a card for them to dispaly to the user. This
+   * function also allows user to switch between different views
+   * and toggle between different ways to see the screen.
+   */
   function init() {
     fetch("/getFoodItems")
       .then(statusCheck)
@@ -53,6 +67,13 @@
       });
   }
 
+  /**
+   * This is our createCard function which styles the card
+   * that we are using to display the grocery item and the image
+   * as well as its attributes to the user
+   * @param {card} card - takes in a card parameter which is the
+   * object that is displayed to the user and styled.
+   */
   function createCard(card) {
     let div = document.createElement('div');
     div.id = card.name + " " + card.price;
@@ -106,6 +127,17 @@
     document.getElementById('grocery-board').appendChild(div);
   }
 
+  /**
+   * This is our createCartCard function which creates a card
+   * containing information about the grocery item to display
+   * to the user when the item is in the cart.
+   * @param {item} item - this is the grocery item that we
+   * are looking at currently
+   * @param {img} img - this is the image of the given grocery
+   * item that we display to the user
+   * @param {id} id - this is the id of the grocery item which
+   * is used for styling
+   */
   function createCartCard(item, img, id) {
     let div = document.createElement("div");
     div.id = id;
@@ -134,6 +166,15 @@
     div.append(btn, btn2);
   }
 
+  /**
+   * This is our purchase function which makes a fetch
+   * call to the /checkCart API in order to purchase
+   * the given item if it is in the cart. This function
+   * also checks to make sure all items in the cart
+   * are in stock before purchase.
+   * @param {id} id - takes in an id of the grocery item
+   * in order to check if it is available. 
+   */
   async function purchase(id) {
     let bodyData = new FormData();
     bodyData.append("id", id);
@@ -148,14 +189,27 @@
             purchase(element.id);
           });
         })
-      fetch('/purchaseID', {method: 'post', body:bodyData}).catch(console.error);
+      fetch('/purchaseID', {method: 'post', body:bodyData})
+        .catch(err => {
+          handleError(err);
+        });
     } else {
       noStock();
     }
-    fetch('/purchase', {method: "post", body: bodyData}).catch(console.error);
+    fetch('/purchase', {method: "post", body: bodyData})
+      .catch(err => {
+        handleError(err);
+      });
     document.getElementById(id).remove();
   }
 
+  /**
+   * This is our removeCart function which makes a fetch
+   * call to the /remove API in order to remove the given
+   * grocery item from the cart.
+   * @param {id} id - this is the id of the grocery item
+   * we want to remove
+   */
   function removeCart(id) {
     let bodyData = new FormData();
     bodyData.append("id", id);
@@ -167,6 +221,11 @@
     document.getElementById(id).remove();
   }
 
+  /**
+   * This is our purchaseAll function which checks
+   * if all the groceries in the cart are in stock
+   * and if they are, it proceeds with purchasing them all.
+   */
   async function purchaseAll() {
     let inStock = true;
     let user = window.localStorage.getItem('user');
@@ -190,6 +249,12 @@
     }
   }
 
+  /**
+   * This is our noStock function which
+   * tells the user that one or more of the items
+   * in cart may not be in stock when they try to purchase
+   * their items from cart.
+   */
   function noStock() {
     let div = document.createElement('div');
     div.id = 'noStock';
@@ -205,6 +270,17 @@
     }, 3000);
   }
 
+  /**
+   * This is our getConfirmation function which
+   * asks the user if they want to confirm their
+   * transaction as a final call before making the
+   * purchase.
+   * @param {all} all - this is the all parameter
+   * which determines if they want to purchase
+   * all items or not 
+   * @param {id} id  - this is the id of the item
+   * that they want to purchase
+   */
   function getConfirmation(all, id) {
     let div = document.createElement('div');
     div.id = 'confirmation';
@@ -231,6 +307,14 @@
     document.querySelector('main').prepend(div);
   }
 
+  /**
+   * This is our createRecipeCard function which creates the
+   * card associated with displaying the recipes for a given grocery
+   * item.
+   * @param {name} name - it takes in one parameter the name
+   * of the grocery item and retrieves informatio about this item
+   * including its price, availability and the recipes you can make with it.
+   */
   function createRecipeCard(name) {
     let div = document.createElement('div');
     div.id = name + "recipes";
@@ -283,6 +367,13 @@
     div.appendChild(recipeInfo);
   }
 
+  /**
+   * This is our search function which works to
+   * filter based on the user's preference. For example,
+   * if they specify that they want to see vegetarian
+   * groceries, this function will search for those groceries
+   * and display it to them
+   */
   function search() {
     let keyword = document.getElementById('search-input').value;
     document.querySelectorAll("#grocery-board div").forEach(function(element) {
@@ -296,6 +387,13 @@
     });
   }
 
+  /**
+   * This is our filter function which filters down the
+   * grocery items to the desired choice of the user based
+   * on the restriction that they have passed in.
+   * @param {restriction} restriction - this is the condition
+   * in which the user wants to filter their groceries by.
+   */
   function filter(restriction) {
     document.querySelectorAll('#grocery-board div').forEach(function(element) {
       if (element.classList.contains(restriction)) {
@@ -306,6 +404,13 @@
     });
   }
 
+  /**
+   * This is our filterPrice function which filters the groceries
+   * based on the numerical value of the price of the given grocery
+   * item.
+   * @param {price} price - this is the price that the user has defined
+   * they want to filter by.
+   */
   function filterPrice(price) {
     document.querySelectorAll('#grocery-board div').forEach(function(element) {
       let itemPrice = element.id.substring(element.id.lastIndexOf(" ") + 1);
@@ -317,12 +422,21 @@
     });
   }
 
+  /**
+   * This is our reset function which resets the view of the page
+   * to contain all the groceries after some filtering has been done.
+   */
   function reset() {
     document.querySelectorAll('#grocery-board div').forEach(function(element) {
       element.style.display = "inline";
     });
   }
 
+  /**
+   * This is our toggleView function which allows the users to
+   * toggle between the main state and the cart state to display
+   * to the user
+   */
   function toggleView() {
     let cartPage = document.getElementById('cart-page');
     let mainPage = document.getElementById('main-page');
@@ -331,6 +445,16 @@
     document.getElementById('all').classList.toggle('hidden');
   }
 
+  /**
+   * This is my statusCheck function which checks
+   * whether or not the response from the endpoint
+   * was successful or not.
+   * @param {response} response takes in response
+   * as a parameter which is the status code received
+   * from the fetch request and checks if it is valid or not
+   * @returns {response} response - returns a response
+   * object that shows whether the fetch was successful or not.
+   */
   async function statusCheck(response) {
     if (!response.ok) {
       throw new Error(await response.text());
@@ -338,6 +462,14 @@
     return response;
   }
 
+  /**
+   * This is my handle error function which takes in
+   * the error message receivd from the fetch call and
+   * append a paragraph onto the webpage stating that
+   * there was an error.
+   * @param {err} err  - takes in an error object
+   * that is retrived from the fetch call.
+   */
   function handleError(err) {
     let p1 = document.createElement("p");
     p1.textContent = "There has been an error retrieving your data. Please try again" +

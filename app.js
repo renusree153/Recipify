@@ -449,8 +449,6 @@ app.post('/checkout', async (req, res) => {
 app.post("/getPurchases", async (req, res) => {
   let userName = req.body.name;
   let db = await getDBConnection();
-    //let query = "SELECT * FROM purchases WHERE user = ?";
-    //let all = await db.all(query, userName);
   let query = "SELECT * FROM purchaseInfo AS t JOIN purchases AS p ON t.user = p.user WHERE t.user = ?";
   let all = await db.all(query, [userName]);
   db.close();
