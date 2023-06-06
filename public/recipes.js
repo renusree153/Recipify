@@ -35,7 +35,7 @@
           btn1.id = "submitRtg";
           btn1.textContent = "Submit Rating";
           btn1Func(btn1, recipe);
-          getAvgRating(recipeCard);
+          getAvgRating(recipeCard, recipe);
           recipeCard.appendChild(btn1);
           let btn2 = document.createElement("button");
           btn2.id = "showRev";
@@ -67,7 +67,7 @@
     });
   }
 
-  function getAvgRating(recipeCard) {
+  function getAvgRating(recipeCard, recipe) {
     let avgRating = document.createElement("p");
     let bodyData = new FormData();
     bodyData.append("recipe", recipe.name);
@@ -115,9 +115,7 @@
       .then(res => res.json())
       .then(res => {
         res.forEach((review) => {
-          let newRev = document.createElement("p");
-          newRev.textContent = "-" +review.comment;
-          div.appendChild(newRev);
+          createNewRev(review, div);
         })
         let button = document.createElement("button");
         button.textContent = "Add your review"
@@ -125,17 +123,32 @@
         let btn2 = document.createElement("button");
         btn2.textContent = "Close out";
         div.appendChild(btn2);
-        btn2.addEventListener("click", function(event) {
-          div.style.display = "none";
-        })
-        let textBox = document.createElement("input");
-        textBox.type = "text";
-        div.appendChild(textBox);
+        btn2Func(btn2, div);
+        let textBox = createTextBox(div);
         buttonFunc(textBox, div, name)
       })
       .catch(err => {
         console.error("Error retrieving dat ", err);
       })
+  }
+
+  function createTextBox(div) {
+    let textBox = document.createElement("input");
+    textBox.type = "text";
+    div.appendChild(textBox);
+    return textBox;
+  }
+
+  function btn2Func(btn2, div) {
+    btn2.addEventListener("click", function(event) {
+      div.style.display = "none";
+    })
+  }
+
+  function createNewRev(review, div) {
+    let newRev = document.createElement("p");
+    newRev.textContent = "-" +review.comment;
+    div.appendChild(newRev);
   }
 
   function buttonFunc (textBox, div, name) {
