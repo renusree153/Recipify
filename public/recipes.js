@@ -29,13 +29,13 @@
           let recipeName = document.createElement("h2");
           recipeName.textContent = recipe.name;
           let ratingForm = document.createElement("form");
-          defineRating();
+          defineRating(ratingForm);
           appendChildren(recipeCard, recipeImg, recipeName, ratingForm);
           let btn1 = document.createElement("button");
           btn1.id = "submitRtg";
           btn1.textContent = "Submit Rating";
-          btn1Func(recipe);
-          getAvgRating();
+          btn1Func(btn1, recipe);
+          getAvgRating(recipeCard);
           recipeCard.appendChild(btn1);
           let btn2 = document.createElement("button");
           btn2.id = "showRev";
@@ -55,7 +55,7 @@
     recipeCard.appendChild(ratingForm);
   }
 
-  function btn1Func() {
+  function btn1Func(btn1, recipe) {
     btn1.addEventListener("click", function() {
       let rating = document.querySelector('input[name="rating"]:checked').value;
       let bodyData = new FormData();
@@ -67,7 +67,7 @@
     });
   }
 
-  function getAvgRating() {
+  function getAvgRating(recipeCard) {
     let avgRating = document.createElement("p");
     let bodyData = new FormData();
     bodyData.append("recipe", recipe.name);
@@ -86,7 +86,7 @@
       });
   }
 
-  function defineRating() {
+  function defineRating(ratingForm) {
     for (let i = 1; i <= 5; i++) {
       let ratingInput = document.createElement('input');
       let ratingLabel = document.createElement('label');
@@ -131,28 +131,33 @@
         let textBox = document.createElement("input");
         textBox.type = "text";
         div.appendChild(textBox);
-        button.addEventListener("click", function (event) {
-          if (textBox.value) {
-            let reviewText = "- " + textBox.value;
-            let p = document.createElement("p");
-            p.textContent = reviewText;
-            div.insertBefore(p, button);
-            let bodyData = new FormData();
-            bodyData.append("recipe", name);
-            bodyData.append("review", p.textContent);
-            bodyData.append("rating", 5);
-            fetch("/addReview", {
-              method: "POST",
-              body: (bodyData)
-            })
-            .then(res => res.json())
-            .then(res => console.log(res))
-            .catch(err => console.error(err));
-          }
-        })
+        buttonFunc(textBox, div, name)
       })
       .catch(err => {
         console.error("Error retrieving dat ", err);
       })
   }
+
+  function buttonFunc (textBox, div, name) {
+    button.addEventListener("click", function (event) {
+      if (textBox.value) {
+        let reviewText = "- " + textBox.value;
+        let p = document.createElement("p");
+        p.textContent = reviewText;
+        div.insertBefore(p, button);
+        let bodyData = new FormData();
+        bodyData.append("recipe", name);
+        bodyData.append("review", p.textContent);
+        bodyData.append("rating", 5);
+        fetch("/addReview", {
+          method: "POST",
+          body: (bodyData)
+        })
+        .then(res => res.json())
+        .then(res => console.log(res))
+        .catch(err => console.error(err));
+      }
+    })
+  }
+
 })();
