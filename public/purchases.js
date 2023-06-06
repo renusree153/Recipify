@@ -36,7 +36,7 @@
       });
   }
 
-  function appendChildren (newDiv, img, itemDes, purchaseId, purchaseDate) {
+  function appendChildren(newDiv, img, itemDes, purchaseId, purchaseDate) {
     newDiv.appendChild(img);
     newDiv.appendChild(itemDes);
     newDiv.appendChild(purchaseId);
