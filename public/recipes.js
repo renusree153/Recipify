@@ -126,7 +126,7 @@
         div.appendChild(btn2);
         btn2Func(btn2, div);
         let textBox = createTextBox(div);
-        buttonFunc(textBox, div, name);
+        buttonFunc(button, textBox, div, name, p1);
       })
       .catch(err => {
         console.error("Error retrieving dat ", err);
@@ -141,9 +141,9 @@
   }
 
   function btn2Func(btn2, div) {
-    btn2.addEventListener("click", function(event) {
+    btn2.addEventListener("click", function() {
       div.style.display = "none";
-    })
+    });
   }
 
   function createNewRev(review, div) {
@@ -152,7 +152,7 @@
     div.appendChild(newRev);
   }
 
-  function buttonFunc(textBox, div, name) {
+  function buttonFunc(button, textBox, div, name, p1) {
     button.addEventListener("click", function (event) {
       if (textBox.value) {
         let reviewText = "- " + textBox.value;
@@ -161,7 +161,7 @@
         div.insertBefore(p1, button);
         let bodyData = new FormData();
         bodyData.append("recipe", name);
-        bodyData.append("review", p.textContent);
+        bodyData.append("review", p1.textContent);
         bodyData.append("rating", 5);
         fetch("/addReview", {
           method: "POST",
@@ -171,6 +171,20 @@
           .catch(err => console.error(err));
         }
     });
+  }
+
+  async function statusCheck(response) {
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
+    return response;
+  }
+
+  function handleError(err) {
+    let p1 = document.createElement("p");
+    p1.textContent = "There has been an error retrieving your data. Please try again" +
+      "Here is the error: " + err;
+    document.getElementById("main").appendChild(p1);
   }
 
 })();

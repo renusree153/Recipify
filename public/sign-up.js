@@ -2,7 +2,7 @@
 (function() {
   window.addEventListener("load", init);
   function init() {
-    document.getElementById("submitBtn").addEventListener("click", addUser)
+    document.getElementById("submitBtn").addEventListener("click", addUser);
   }
   function addUser() {
     let username = document.getElementById("username").value;
@@ -16,22 +16,30 @@
       method: "POST",
       body: bodyData
     })
-    .then(res => res.json())
-    .then(res => {
-      if (res.error == "Username already exists") {
-        document.getElementById("dupUser").classList.remove("hidden");
-      } else {
-        window.location.href = "page.html";
+        .then(statusCheck)
+        .then(res => res.json())
+        .then(res => {
+          if (res.error == "Username already exists") {
+            document.getElementById("dupUser").classList.remove("hidden");
+          } else {
+            window.location.href = "page.html";
+          }
+        })
+        .catch(err => {
+          handleError(err);
+        })
+  }
+    async function statusCheck(response) {
+      if (!response.ok) {
+        throw new Error(await response.text());
       }
-    });
-  }
-
-    // once Theo modifies database to have email too, append that as well, need id for this table as well
-
-  async function statusCheck(response) {
-    if(!response.ok) {
-      throw new Error(await response.text());
+      return response;
     }
-    return response;
-  }
+    
+    function handleError(err) {
+      let p1 = document.createElement("p");
+      p1.textContent = "There has been an error retrieving your data. Please try again" +
+        "Here is the error: " + err;
+      document.getElementById("main").appendChild(p1);
+    }
 })();
