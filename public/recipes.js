@@ -128,13 +128,3 @@
 
     }
 })();
-
-/**
-fetch( endpoint for all recipes )
-        .then(resp => resp.json())
-        .then(resp => {
-            createRecipeCard(resp);
-
-        });
-
-        */

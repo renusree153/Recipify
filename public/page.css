@@ -112,6 +112,22 @@
   text-align: center;
 }
 
+#purchase {
+  float: right;
+  margin-top: 20px;
+  height: 30px;
+  width: 30px;
+}
+
+#purchasesP {
+  float: right;
+  margin-right: 70px;
+  margin-top: 15px;
+  height:30px;
+  width: 30px;
+}
+
+
 #confirmation {
   height: 400px;
   margin: auto;
