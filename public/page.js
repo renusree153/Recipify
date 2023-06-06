@@ -2,12 +2,20 @@
 
 (function() {
 
-  const LESSTHAN3 = 3;
-  const LESSTHAN5 = 5;
   window.addEventListener('load', init);
 
   function init() {
-    getFoodItems();
+    fetch("/getFoodItems")
+      .then(statusCheck)
+      .then(res => res.json())
+      .then(res => {
+        for (let i = 0; i < res.length; i++) {
+          createCard(res[i]);
+        }
+      })
+      .catch(err => {
+        handleError(err);
+      });
     document.getElementById("switchView").addEventListener("click", function() {
       document.getElementById("grocery-board").classList.toggle("grid-view");
       document.getElementById("grocery-board").classList.toggle("list-view");
@@ -20,34 +28,16 @@
       filter("vegetarian");
     });
     document.getElementById("lessThan3").addEventListener("click", function() {
-      filterPrice(LESSTHAN3);
+      filterPrice(3);
     });
     document.getElementById("lessThan5").addEventListener('click', function() {
-      filterPrice(LESSTHAN5);
+      filterPrice(5);
     });
     document.getElementById('all').addEventListener('click', function() {
       getConfirmation(true, null);
     });
     document.getElementById('reset').addEventListener('click', reset);
     document.getElementById('cart').addEventListener('click', toggleView);
-    checkCart();
-  }
-
-  function getFoodItems() {
-    fetch("/getFoodItems")
-      .then(statusCheck)
-      .then(res => res.json())
-      .then(res => {
-        for (let i = 0; i < res.length; i++) {
-          createCard(res[i]);
-        }
-      })
-      .catch(err => {
-        handleError(err);
-      });
-  }
-
-  function checkCart() {
     let bodyData = new FormData();
     bodyData.append('user', window.localStorage.getItem('user'));
     fetch('/checkCart', {method: 'post', body: bodyData})
@@ -74,22 +64,6 @@
     p1.textContent = card.name;
     let p2 = document.createElement('p');
     p2.textContent = card.price;
-    checkStatus(card, desc, div);
-    let btn = document.createElement('button');
-    let btn2 = document.createElement("button");
-    btn.textContent = "ADD TO CART";
-    btn2.textContent = "VIEW INFORMATION/RECIPES";
-    btn2.id = "infoBtn";
-    btnFunc(btn, card, card.name, window.localStorage.getItem('user'));
-    btn2.addEventListener("click", function() {
-      createRecipeCard(card.name);
-    });
-    div.appendChild(img);
-    appendChildren(div, p1, p2, desc, btn, btn2);
-    document.getElementById('grocery-board').appendChild(div);
-  }
-
-  function checkStatus(card, desc, div) {
     if (card.vegan === 1) {
       desc.textContent += "VEGAN ";
       div.classList.add('vegan');
@@ -98,39 +72,38 @@
       desc.textContent += "VEGETARIAN ";
       div.classList.add('vegetarian');
     }
-  }
-
-  function btnFunc(btn, card, item, user) {
+    let btn = document.createElement('button');
+    let btn2 = document.createElement("button");
+    btn.textContent = "ADD TO CART";
+    btn2.textContent = "VIEW INFORMATION/RECIPES";
+    btn2.id = "infoBtn";
     btn.addEventListener('click', function() {
+      let item = card.name;
+      let user = window.localStorage.getItem('user');
       let bodyData = new FormData();
       bodyData.append("item", item);
       bodyData.append('id', user);
-      addCart(card);
+      fetch('/addToCart', {method: 'POST', body: bodyData})
+        .then(statusCheck)
+        .then(res => res.json())
+        .then(function(res) {
+          let id = res;
+          createCartCard(item, "images/items/" + item + ".jpg", id);
+        })
+        .catch(err => {
+          handleError(err);
+        });
     });
-  }
-
-  function appendChildren(div, p1, p2, desc, btn, btn2) {
+    btn2.addEventListener("click", function() {
+      createRecipeCard(card.name);
+    });
+    div.appendChild(img);
     div.appendChild(p1);
     div.appendChild(p2);
     div.appendChild(desc);
     div.appendChild(btn);
     div.appendChild(btn2);
-  }
-
-  function addCart(card) {
-    let item = card.name;
-    let bodyData = new FormData();
-    bodyData.append("item", item);
-    fetch('/addToCart', {method: 'POST', body: bodyData})
-      .then(statusCheck)
-      .then(res => res.json())
-      .then(function(res) {
-        let id = res;
-        createCartCard(item, "images/items/" + item + ".jpg", id);
-      })
-      .catch(err => {
-        handleError(err);
-      });
+    document.getElementById('grocery-board').appendChild(div);
   }
 
   function createCartCard(item, img, id) {
@@ -227,14 +200,6 @@
   }
 
   function createRecipeCard(name) {
-    let itemPrice = document.createElement("p");
-    itemPrice.textContent = "The price of this item is $" + res[0].price;
-    let availability = document.createElement('p');
-    if (res[0].stock > 0) {
-      availability.textContent = "In Stock";
-    } else {
-      availability.textContent = "out of Stock";
-    }
     let div = document.createElement('div');
     div.id = name + "recipes";
     let p1 = document.createElement('h2');
@@ -242,20 +207,12 @@
     div.appendChild(p1);
     div.classList.add("shortRecipes");
     document.querySelector("main").appendChild(div);
-    let recipeInfo = document.createElement("h4");
-    recipeInfo.textContent = "Listed below are some recipes you can make!";
-    getItemInfo(name);
-    div.appendChild(itemPrice);
-    div.appendChild(availability);
-    getRecipes(name);
-    div.appendChild(recipeInfo);
-  }
-
-  function getItemInfo(name) {
-    let availability = document.createElement('p');
-    let itemPrice = document.createElement("p");
     let bodyData = new FormData();
     bodyData.append("item", name);
+    let recipeInfo = document.createElement("h4");
+    recipeInfo.textContent = "Listed below are some recipes you can make!";
+    let itemPrice = document.createElement("p");
+    let availability = document.createElement('p');
     fetch("/getItemInfo", {method: "POST", body: bodyData})
       .then(statusCheck)
       .then(res => res.json())
@@ -270,11 +227,8 @@
       .catch(err => {
         handleError(err);
       });
-  }
-
-  function getRecipes(name, div) {
-    let bodyData = new FormData();
-    bodyData.append("item", name);
+    div.appendChild(itemPrice);
+    div.appendChild(availability);
     fetch("/getRecipes", {method: "POST", body: bodyData})
       .then(statusCheck)
       .then(res => res.json())
@@ -294,6 +248,7 @@
       .catch(err => {
         handleError(err);
       });
+    div.appendChild(recipeInfo);
   }
 
   function search() {
