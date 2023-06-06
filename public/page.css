@@ -13,6 +13,14 @@
   width: 15px;
 }
 
+#showRecipes {
+  float: right;
+  margin-top: 15px;
+  margin-right: 50px;
+  height: 30px;
+  width: 30px;
+}
+
 #cart {
   margin-right: 40px;
   float: right;
@@ -130,7 +138,7 @@
 
 
 #confirmation {
-  height: 400px;
+  height: 100px;
   margin: auto;
   margin-bottom: 10pt;
   width: 200px;
