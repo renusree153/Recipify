@@ -127,6 +127,21 @@
   function purchase(id) {
     let bodyData = new FormData();
     bodyData.append("id", id);
+    let response = await fetch('checkAvailable', {method: 'post', body:bodyData});
+    let data = await response.json();
+    inStock = data;
+    if (inStock) {
+      fetch('/checkCart', {method: "post", body:bodyData})
+        .then(res => res.json())
+        .then(function(res) {
+          res.forEach(function(element) {
+            purchase(element.id);
+          });
+        })
+      fetch('/purchaseID', {method: 'post', body:bodyData}).catch(console.error);
+    } else {
+      noStock();
+    }
     fetch('/purchase', {method: "post", body: bodyData}).catch(console.error);
     document.getElementById(id).remove();
   }
@@ -138,21 +153,44 @@
     document.getElementById(id).remove();
   }
 
-  function purchaseAll() {
+  async function purchaseAll() {
+    let inStock = true;
     let user = window.localStorage.getItem('user');
     let bodyData = new FormData();
     bodyData.append('user', user);
-    fetch('/checkCart', {method: "post", body:bodyData})
-      .then(res => res.json())
-      .then(function(res) {
-        res.forEach(function(element) {
-          purchase(element.id);
-        });
-      })
+    let response = await fetch('checkAvailable', {method: 'post', body:bodyData});
+    let data = await response.json();
+    inStock = data;
+    if (inStock) {
+      fetch('/checkCart', {method: "post", body:bodyData})
+        .then(res => res.json())
+        .then(function(res) {
+          res.forEach(function(element) {
+            purchase(element.id);
+          });
+        })
+      fetch('/purchaseID', {method: 'post', body:bodyData}).catch(console.error);
+    } else {
+      noStock();
+    }
+  }
+
+  function noStock() {
+    let div = document.createElement('div');
+    div.id = 'noStock';
+    let ptag = document.createElement('p');
+    ptag.textContent = "Items in cart not in stock";
+    div.append(ptag);
+    document.querySelector('main').prepend(div);
+    setTimeout(() => {
+      const div = document.getElementById('noStock');
+      if (div) {
+        div.remove();
+      }
+    }, 3000);
   }
 
   function getConfirmation(all, id) {
-    console.log('hi');
     let div = document.createElement('div');
     div.id = 'confirmation';
     let ptag = document.createElement('p');

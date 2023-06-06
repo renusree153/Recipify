@@ -37,24 +37,21 @@ app.post('/addUser', async (req, res) => {
   try {
   let user = req.body.username;
   let pass = req.body.password;
+  let email = req.body.email;
   let db = await getDBConnection();
   let existingUser = await db.get('SELECT * FROM users WHERE username = ?', [user]);
   if (existingUser) {
     res.json({error: "Username already exists"});
   }
-  const query2 = "INSERT INTO users (username, password)" +
-    " VALUES (?, ?)";
-    db.run(query2, [user, pass]);
+  const query2 = "INSERT INTO users (username, password, email)" +
+    " VALUES (?, ?, ?)";
+    db.run(query2, [user, pass, email]);
     let users = await db.all("SELECT * FROM users");
     db.close();
     res.json(users);
   } catch (err) {
     res.status(500).send("Server error");
   }
-});
-
-app.get('/log', async (req, res) => {
-    console.log('hi there');
 });
 
 app.get("/getFoodItems", async (req, res) => {
@@ -120,7 +117,7 @@ app.post('/getItemInfo', async (req, res) => {
   } catch(err) {
     res.status(500).send("Server error, please try again later");
   }
-})
+});
 
 app.post("/getPrice", async (req, res) => {
   try {
@@ -133,7 +130,7 @@ app.post("/getPrice", async (req, res) => {
   } catch(err) {
     res.status(500).send("Server error, please try again later");
   }
-})
+});
 
 app.post("/getRating", async (req, res) => {
   try {
@@ -158,7 +155,7 @@ app.post('/addToCart', async (req, res) => {
     res.type('text');
     res.send(id.toString());
   } catch (err) {
-    res.status(500).send("Server error, please try again later"); 
+    res.status(500).send("Server error, please try again later");
   }
 })
 
@@ -171,7 +168,7 @@ app.post('/checkCart', async (req, res) => {
     db.close();
     res.json(cartInfo);
   } catch(err) {
-    res.status(500).send("Server error, please try again later"); 
+    res.status(500).send("Server error, please try again later");
   }
 })
 
@@ -184,7 +181,7 @@ app.post("/getReviews", async(req, res) => {
     db.close();
     res.json(results);
   } catch (err) {
-    res.status(500).send("Server error, please try again later"); 
+    res.status(500).send("Server error, please try again later");
   }
 });
 
@@ -222,13 +219,82 @@ app.post('/purchase', async (req, res) => {
     let query = "SELECT * FROM cart WHERE id = ?";
     let itemInfo = (await db.all(query, [id]))[0];
     db.run("DELETE FROM cart WHERE id = ?", [id]);
-    let query2 = "INSERT INTO purchases (user, name) VALUES (?, ?)"
+    let query2 = "INSERT INTO purchases (user, name) VALUES (?, ?)";
     db.run(query2, [itemInfo.user, itemInfo.name]);
     db.close();
   } catch(err) {
     res.status(500).send("Server error, please try again later");
   }
 });
+
+app.post('/purchaseID', async (req, res) => {
+  try {
+    let user = req.body.user;
+    let db = await getDBConnection();
+    let queryDate = "SELECT date FROM purchases WHERE user = ? ORDER BY date DESC";
+    let date = await db.get(queryDate, [user]);
+    let purchaseID = createID(date.date, user);
+    let queryAdd = "INSERT INTO purchaseInfo (purchaseID, user, date) VALUES (?, ?, ?)";
+    db.run(queryAdd, [purchaseID, user, date.date]);
+    db.close();
+  } catch (err) {
+    res.status(500).send("Server error, please try again later");
+  }
+})
+
+function createID(recent, user) {
+  let calendar = recent.substring(0, recent.indexOf(' '));
+  let clock = recent.substring(recent.indexOf(' ') + 1);
+  let year = calendar.substring(0, calendar.indexOf('-'));
+  let month = calendar.substring(calendar.indexOf('-') + 1, calendar.lastIndexOf('-'));
+  let day = calendar.substring(calendar.lastIndexOf('-') + 1);
+  let hour = clock.substring(0, clock.indexOf(':'));
+  let min = clock.substring(clock.indexOf(':') + 1, clock.lastIndexOf(':'));
+  let sec = clock.substring(clock.lastIndexOf(':') + 1);
+  let purchaseID = year + month + day + hour + min + sec + user + Math.floor(Math.random() * 10).toString();
+  return purchaseID;
+}
+
+app.post('/checkAvailableSingle', async (req, res) => {
+  try{
+    let id = req.body.id;
+    let inStock = true;
+    let db = await getDBConnection();
+    let query = "SELECT name FROM cart WHERE id = ?";
+    let item = await db.get(query, [id]);
+    let name = item.name;
+    let stock = await db.get("SELECT stock FROM groceries WHERE name = ?", [name]);
+    if (stock.stock <= 0) {
+      inStock = false;
+    }
+    res.json(inStock);
+    db.close();
+  } catch (error) {
+    console.error;
+  }
+})
+
+app.post('/checkAvailable', async (req, res) => {
+  try {
+    let inStock = true;
+    let user = req.body.user;
+    let db = await getDBConnection();
+    let query = "SELECT name FROM cart WHERE user = ?"
+    let items = await db.all(query, [user]);
+    for (const element of items) {
+      let query2 = "SELECT stock FROM groceries WHERE name = ?";
+      let stock = await db.get(query2, [element.name]);
+      if (stock.stock <= 0) {
+        inStock = false;
+      }
+    }
+    db.close();
+    console.log(inStock);
+    res.send(inStock);
+  } catch(err) {
+    res.status(500).send("Server error, please try again later");
+  }
+})
 
 app.post('/remove', async (req, res) => {
   try {
