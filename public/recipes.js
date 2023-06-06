@@ -62,6 +62,7 @@
       bodyData.append("name", recipe.name);
       bodyData.append("rate", rating);
       fetch("/insertRating", {method: "POST", body: bodyData})
+        .then(statusCheck)
         .then(res => res.json())
         .then(res => console.log(res));
     });
@@ -104,9 +105,9 @@
   function createRecipeCard(name) {
     let div = document.createElement('div');
     div.id = "Reviews for " + name;
-    let p = document.createElement('h2');
-    p.textContent = "Here are some reviews for " + name + "!";
-    div.appendChild(p);
+    let p1 = document.createElement('h2');
+    p1.textContent = "Here are some reviews for " + name + "!";
+    div.appendChild(p1);
     div.classList.add("shortReview");
     document.querySelector("main").appendChild(div);
     let bodyData = new FormData();
@@ -116,16 +117,16 @@
       .then(res => {
         res.forEach((review) => {
           createNewRev(review, div);
-        })
+        });
         let button = document.createElement("button");
-        button.textContent = "Add your review"
+        button.textContent = "Add your review";
         div.appendChild(button);
         let btn2 = document.createElement("button");
         btn2.textContent = "Close out";
         div.appendChild(btn2);
         btn2Func(btn2, div);
         let textBox = createTextBox(div);
-        buttonFunc(textBox, div, name)
+        buttonFunc(textBox, div, name);
       })
       .catch(err => {
         console.error("Error retrieving dat ", err);
@@ -147,17 +148,17 @@
 
   function createNewRev(review, div) {
     let newRev = document.createElement("p");
-    newRev.textContent = "-" +review.comment;
+    newRev.textContent = "-" + review.comment;
     div.appendChild(newRev);
   }
 
-  function buttonFunc (textBox, div, name) {
+  function buttonFunc(textBox, div, name) {
     button.addEventListener("click", function (event) {
       if (textBox.value) {
         let reviewText = "- " + textBox.value;
-        let p = document.createElement("p");
-        p.textContent = reviewText;
-        div.insertBefore(p, button);
+        let p1 = document.createElement("p");
+        p1.textContent = reviewText;
+        div.insertBefore(p1, button);
         let bodyData = new FormData();
         bodyData.append("recipe", name);
         bodyData.append("review", p.textContent);
@@ -166,11 +167,10 @@
           method: "POST",
           body: (bodyData)
         })
-        .then(res => res.json())
-        .then(res => console.log(res))
-        .catch(err => console.error(err));
-      }
-    })
+          .then(res => res.json())
+          .catch(err => console.error(err));
+        }
+    });
   }
 
 })();
