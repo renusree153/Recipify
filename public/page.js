@@ -84,7 +84,8 @@
     btn2.addEventListener("click", function() {
       createRecipeCard(card.name);
     });
-    appendChildren(div, img, p1, p2, desc, btn, btn2);
+    div.appendChild(img);
+    appendChildren(div, p1, p2, desc, btn, btn2);
     document.getElementById('grocery-board').appendChild(div);
   }
 
@@ -104,12 +105,11 @@
       let bodyData = new FormData();
       bodyData.append("item", item);
       bodyData.append('id', user);
-      addCart();
+      addCart(card);
     });
   }
 
-  function appendChildren(div, img, p1, p2, desc, btn, btn2) {
-    div.appendChild(img);
+  function appendChildren(div, p1, p2, desc, btn, btn2) {
     div.appendChild(p1);
     div.appendChild(p2);
     div.appendChild(desc);
@@ -117,20 +117,20 @@
     div.appendChild(btn2);
   }
 
-  function addCart() {
+  function addCart(card) {
     let item = card.name;
     let bodyData = new FormData();
     bodyData.append("item", item);
     fetch('/addToCart', {method: 'POST', body: bodyData})
-    .then(statusCheck)
-    .then(res => res.json())
-    .then(function(res) {
-      let id = res;
-      createCartCard(item, "images/items/" + item + ".jpg", id);
-    })
-    .catch(err => {
-      handleError(err);
-    });
+      .then(statusCheck)
+      .then(res => res.json())
+      .then(function(res) {
+        let id = res;
+        createCartCard(item, "images/items/" + item + ".jpg", id);
+      })
+      .catch(err => {
+        handleError(err);
+      });
   }
 
   function createCartCard(item, img, id) {
@@ -234,12 +234,20 @@
     div.appendChild(p1);
     div.classList.add("shortRecipes");
     document.querySelector("main").appendChild(div);
-    let bodyData = new FormData();
-    bodyData.append("item", name);
     let recipeInfo = document.createElement("h4");
     recipeInfo.textContent = "Listed below are some recipes you can make!";
     let itemPrice = document.createElement("p");
     let availability = document.createElement('p');
+    getItemInfo(name);
+    div.appendChild(itemPrice);
+    div.appendChild(availability);
+    getRecipes(name);
+    div.appendChild(recipeInfo);
+  }
+
+  function getItemInfo(name) {
+    let bodyData = new FormData();
+    bodyData.append("item", name);
     fetch("/getItemInfo", {method: "POST", body: bodyData})
       .then(statusCheck)
       .then(res => res.json())
@@ -254,8 +262,11 @@
       .catch(err => {
         handleError(err);
       });
-    div.appendChild(itemPrice);
-    div.appendChild(availability);
+  }
+
+  function getRecipes(name) {
+    let bodyData = new FormData();
+    bodyData.append("item", name);
     fetch("/getRecipes", {method: "POST", body: bodyData})
       .then(statusCheck)
       .then(res => res.json())
@@ -275,7 +286,6 @@
       .catch(err => {
         handleError(err);
       });
-    div.appendChild(recipeInfo);
   }
 
   function search() {
