@@ -16,6 +16,7 @@ const app = express();
 const sqlite = require("sqlite");
 const multer = require("multer");
 const SERVER_STATUS = 500;
+const DEFAULT_PORT = 8000;
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -26,7 +27,7 @@ app.use(multer().none());
  * a connection with our SQL database in order to query
  * and retrieve information about it later on.
  * @returns {db} - db returns a db object which
- * represents the database that is going to be queried. 
+ * represents the database that is going to be queried.
  */
 async function getDBConnection() {
   const db = await sqlite.open({
@@ -203,7 +204,7 @@ app.post("/getPrice", async (req, res) => {
     let results = await db.all(query, [item]);
     db.close();
     res.json(results);
-  } catch(err) {
+  } catch (err) {
     res.status(SERVER_STATUS).send("Server error, please try again later");
   }
 });
@@ -361,7 +362,8 @@ app.post('/checkout', async (req, res) => {
     let user = req.body.user;
     let query = "SELECT * FROM cart WHERE user = ?";
     let db = await getDBConnection();
-    let all = await db.all(query);
+    let all = await db.all(query, [user]);
+    res.json(all);
   } catch (err) {
     res.status(SERVER_STATUS).send("Server error, please try again later");
   }
@@ -375,7 +377,7 @@ app.post('/checkout', async (req, res) => {
  * on the server side, an error
  * message is displayed to the user.
  */
-app.post("/getPurchases", async(req, res) => {
+app.post("/getPurchases", async (req, res) => {
   let userName = req.body.name;
   let db = await getDBConnection();
     //let query = "SELECT * FROM purchases WHERE user = ?";
@@ -387,5 +389,5 @@ app.post("/getPurchases", async(req, res) => {
 });
 
 app.use(express.static("public"));
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || DEFAULT_PORT;
 app.listen(PORT);

@@ -7,17 +7,7 @@
   window.addEventListener('load', init);
 
   function init() {
-    fetch("/getFoodItems")
-      .then(statusCheck)
-      .then(res => res.json())
-      .then(res => {
-        for (let i = 0; i < res.length; i++) {
-          createCard(res[i]);
-        }
-      })
-      .catch(err => {
-        handleError(err);
-      });
+    getFoodItems();
     document.getElementById("switchView").addEventListener("click", function() {
       document.getElementById("grocery-board").classList.toggle("grid-view");
       document.getElementById("grocery-board").classList.toggle("list-view");
@@ -42,17 +32,35 @@
     document.getElementById('cart').addEventListener('click', toggleView);
     let bodyData = new FormData();
     bodyData.append('user', window.localStorage.getItem('user'));
+    checkCart();
+  }
+
+  function getFoodItems() {
+    fetch("/getFoodItems")
+    .then(statusCheck)
+    .then(res => res.json())
+    .then(res => {
+      for (let i = 0; i < res.length; i++) {
+        createCard(res[i]);
+      }
+    })
+    .catch(err => {
+      handleError(err);
+    });
+  }
+
+  function checkCart() {
     fetch('/checkCart', {method: 'post', body: bodyData})
-      .then(statusCheck)
-      .then(res => res.json())
-      .then(function(res) {
-        res.forEach(function(item) {
-          createCartCard(item.name, "images/items/" + item.name + ".jpg", item.id);
-        });
-      })
-      .catch(err => {
-        handleError(err);
+    .then(statusCheck)
+    .then(res => res.json())
+    .then(function(res) {
+      res.forEach(function(item) {
+        createCartCard(item.name, "images/items/" + item.name + ".jpg", item.id);
       });
+    })
+    .catch(err => {
+      handleError(err);
+    });
   }
 
   function createCard(card) {
@@ -85,27 +93,26 @@
       let bodyData = new FormData();
       bodyData.append("item", item);
       bodyData.append('id', user);
-      fetch('/addToCart', {method: 'POST', body: bodyData})
-        .then(statusCheck)
-        .then(res => res.json())
-        .then(function(res) {
-          let id = res;
-          createCartCard(item, "images/items/" + item + ".jpg", id);
-        })
-        .catch(err => {
-          handleError(err);
-        });
+      addCart();
     });
     btn2.addEventListener("click", function() {
       createRecipeCard(card.name);
     });
-    div.appendChild(img);
-    div.appendChild(p1);
-    div.appendChild(p2);
-    div.appendChild(desc);
-    div.appendChild(btn);
-    div.appendChild(btn2);
+    div.appendChild(img).appendChild(p1).appendChild(p2).appendChild(desc).appendChild(btn).appendChild(btn2);
     document.getElementById('grocery-board').appendChild(div);
+  }
+
+  function addCart() {
+    fetch('/addToCart', {method: 'POST', body: bodyData})
+    .then(statusCheck)
+    .then(res => res.json())
+    .then(function(res) {
+      let id = res;
+      createCartCard(item, "images/items/" + item + ".jpg", id);
+    })
+    .catch(err => {
+      handleError(err);
+    });
   }
 
   function createCartCard(item, img, id) {
