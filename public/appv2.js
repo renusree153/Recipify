@@ -1,3 +1,5 @@
+/*
+
 "use strict";
 
 const sqlite3 = require("sqlite3");
@@ -127,3 +129,5 @@ app.post('/checkCart', async (req, res) => {
 app.use(express.static("public"));
 const PORT = process.env.PORT || 8000;
 app.listen(PORT);
+
+*/
