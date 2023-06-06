@@ -124,12 +124,16 @@ app.get("/allRecipes", async(req, res) => {
 app.post('/addReview', async (req, res) => {
     let recipeName = req.body.recipe;
     let reviewName = req.body.review;
+    console.log(recipeName);
+    console.log(reviewName);
+    let ratingVal = req.body.rating;
     let db = await getDBConnection();
-    const query = "INSERT INTO review (recipeName, reviewName)" +
-      " VALUES (?, ?)";
-    db.run(query, [recipeName, reviewName]);
+    const query = "INSERT INTO review (comment, recipe, rating)" +
+      " VALUES (?, ?, ?)";
+    db.run(query, [reviewName, recipeName, ratingVal]);
     let users = await db.all("SELECT * FROM review");
     db.close();
+    console.log(users);
     res.json(users);
 })
 
