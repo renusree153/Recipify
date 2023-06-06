@@ -13,8 +13,8 @@
         }
       })
     document.getElementById("switchView").addEventListener("click", function() {
-      document.getElementById("grocery-board").classList.toggle("grid-view");
-      document.getElementById("grocery-board").classList.toggle("list-view");
+    document.getElementById("grocery-board").classList.toggle("grid-view");
+    document.getElementById("grocery-board").classList.toggle("list-view");
     })
     document.getElementById('search-btn').addEventListener('click', search);
     document.getElementById('vegan').addEventListener('click', function() {
@@ -195,8 +195,6 @@
     fetch("/getItemInfo", {method: "POST", body: bodyData})
       .then(res => res.json())
       .then(res => {
-        //console.log(res[0].price);
-        //itemPrice.id = "itemPrice";
         itemPrice.textContent = "The price of this item is $" + res[0].price;
         if (res[0].stock > 0) {
           availability.textContent = "In Stock";

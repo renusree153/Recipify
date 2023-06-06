@@ -24,7 +24,6 @@ app.post("/checkUser", async (req, res) => {
         let db = await getDBConnection();
         let user = req.body.username;
         let pass = req.body.password;
-        console.log(user + "  " + pass);
         let query = "SELECT * FROM users WHERE username=? AND password=?;";
         let results = await db.all(query, [user, pass]);
         db.close();
@@ -35,21 +34,23 @@ app.post("/checkUser", async (req, res) => {
 });
 
 app.post('/addUser', async (req, res) => {
-    let user = req.body.username;
-    let pass = req.body.password;
-    console.log(user);
-    console.log(pass);
-    let db = await getDBConnection();
-    let existingUser = await db.get('SELECT * FROM users WHERE username = ?', [user]);
-    if (existingUser) {
+    try {
+      let user = req.body.username;
+      let pass = req.body.password;
+      let db = await getDBConnection();
+      let existingUser = await db.get('SELECT * FROM users WHERE username = ?', [user]);
+      if (existingUser) {
         res.json({error: "Username already exists"});
+      }
+      const query2 = "INSERT INTO users (username, password)" +
+        " VALUES (?, ?)";
+      db.run(query2, [user, pass]);
+      let users = await db.all("SELECT * FROM users");
+      db.close();
+      res.json(users);
+    } catch (err) {
+      res.status(500).send("Server error");
     }
-    const query2 = "INSERT INTO users (username, password)" +
-      " VALUES (?, ?)";
-    db.run(query2, [user, pass]);
-    let users = await db.all("SELECT * FROM users");
-    db.close();
-    res.json(users);
 })
 
 app.get('/log', async (req, res) => {
@@ -57,112 +58,133 @@ app.get('/log', async (req, res) => {
 });
 
 app.get("/getFoodItems", async (req,res) => {
-    let db = await getDBConnection();
-    let query = "SELECT * FROM groceries";
-    let results = await db.all(query);
-    db.close();
-    res.json(results);
+    try {
+      let db = await getDBConnection();
+      let query = "SELECT * FROM groceries";
+      let results = await db.all(query);
+      db.close();
+      res.json(results);
+    } catch(err) {
+        res.status(500).send("Server error, please try again later");
+    }
 })
 
 app.post("/getRecipes", async (req, res) => {
-    let groceryItem = req.body.item;
-    let db = await getDBConnection();
-    let query = "SELECT * FROM groceryToRecipe WHERE name = ?";
-    let results = await db.all(query, [groceryItem]);
-    db.close();
-    res.json(results);
+    try {
+      let groceryItem = req.body.item;
+      let db = await getDBConnection();
+      let query = "SELECT * FROM groceryToRecipe WHERE name = ?";
+      let results = await db.all(query, [groceryItem]);
+      db.close();
+      res.json(results);
+    } catch(err) {
+        res.status(500).send("Server error, please try again later");
+    }
 })
 
 app.post("/insertRating", async(req, res) => {
-  let recipeName = req.body.name;
-  let ratingData = req.body.rate;
-  console.log(ratingData);
-  let db = await getDBConnection();
-  let query = "INSERT INTO ratings (name, rating) VALUES (?, ?)";
-  let result = (await db.run(query, [recipeName, ratingData]));
-  db.close();
-  res.json({msg: "Added new data"});
+  try {
+    let recipeName = req.body.name;
+    let ratingData = req.body.rate;
+    let db = await getDBConnection();
+    let query = "INSERT INTO ratings (name, rating) VALUES (?, ?)";
+    let result = (await db.run(query, [recipeName, ratingData]));
+    db.close();
+    res.json({msg: "Added new data"});
+  } catch(err) {
+    res.status(500).send("Server error, please try again later");
+  }
 })
 
 app.post("/getAvgRating", async (req, res) => {
-    let item = req.body.recipe;
-    console.log(item);
-    let db = await getDBConnection();
-    let query = "SELECT rating FROM ratings WHERE name = ?"
-    let results = await db.all(query, [item]);
-    db.close();
-    res.json(results);
-})
-
-app.post('/test', async (req, res) => {
-    let test = req.body.test;
-    let db = await getDBConnection();
-    let query = ("SELECT * FROM cart");
-    let all = await db.all(query);
-    db.close();
-    res.json(all);
+    try {
+      let item = req.body.recipe;
+      let db = await getDBConnection();
+      let query = "SELECT rating FROM ratings WHERE name = ?"
+      let results = await db.all(query, [item]);
+      db.close();
+      res.json(results);
+    } catch(err) {
+      res.status(500).send("Server error, please try again later");
+    }
 })
 
 app.post('/getItemInfo', async (req, res) => {
-    let db = await getDBConnection();
-    let item = req.body.item;
-    let query = "SELECT * FROM groceries WHERE name = ?";
-    let results = await db.all(query, [item]);
-    db.close();
-    console.log(results);
-    res.json(results);
+    try {
+      let db = await getDBConnection();
+      let item = req.body.item;
+      let query = "SELECT * FROM groceries WHERE name = ?";
+      let results = await db.all(query, [item]);
+      db.close();
+      res.json(results);
+    } catch(err) {
+      res.status(500).send("Server error, please try again later");
+    }
 })
 
 app.post("/getPrice", async (req, res) => {
-    let db = await getDBConnection();
-    let item = req.body.item;
-    let query = "SELECT price FROM groceries WHERE name = ?";
-    let results = await db.all(query, [item]);
-    db.close();
-    console.log(results);
-    res.json(results);
+    try {
+      let db = await getDBConnection();
+      let item = req.body.item;
+      let query = "SELECT price FROM groceries WHERE name = ?";
+      let results = await db.all(query, [item]);
+      db.close();
+      res.json(results);
+    } catch(err) {
+      res.status(500).send("Server error, please try again later");
+    }
 })
 
 app.post("/getRating", async (req, res) => {
-    let db = await getDBConnection();
-    let item = req.body.item;
-    let query = "SELECT average FROM ratings WHERE name = ?";
-    let results = await db.all(query, [item]);
-    db.close();
-    console.log(results);
+    try {
+      let db = await getDBConnection();
+      let item = req.body.item;
+      let query = "SELECT average FROM ratings WHERE name = ?";
+      let results = await db.all(query, [item]);
+      db.close();
+    } catch(err) {
+      res.status(500).send("Server error, please try again later");
+    }
 })
 
 app.post('/addToCart', async (req, res) => {
-    let item = req.body.item;
-    let user = req.body.id;
-    let db = await getDBConnection();
-    let query = "INSERT INTO cart (user, name) VALUES (?, ?)";
-    let id = (await db.run(query, [user, item])).lastID;
-    db.close();
-    res.type('text');
-    res.send(id.toString());
+    try {
+      let item = req.body.item;
+      let user = req.body.id;
+      let db = await getDBConnection();
+      let query = "INSERT INTO cart (user, name) VALUES (?, ?)";
+      let id = (await db.run(query, [user, item])).lastID;
+      db.close();
+      res.type('text');
+      res.send(id.toString());
+    } catch (err) {
+      res.status(500).send("Server error, please try again later"); 
+    }
 })
 
 app.post('/checkCart', async (req, res) => {
-    let user = req.body.user;
-    let db = await getDBConnection();
-    let query = "SELECT * FROM cart WHERE user = ?"
-    let cartInfo = await db.all(query, [user]);
-    db.close();
-    res.json(cartInfo);
+    try {
+      let user = req.body.user;
+      let db = await getDBConnection();
+      let query = "SELECT * FROM cart WHERE user = ?"
+      let cartInfo = await db.all(query, [user]);
+      db.close();
+      res.json(cartInfo);
+    } catch(err) {
+      res.status(500).send("Server error, please try again later"); 
+    }
 })
 
 app.post("/getReviews", async(req, res) => {
     try {
-        let db = await getDBConnection();
-        let name = req.body.item;
-        let query = "SELECT * FROM review WHERE recipe = ?"
-        let results = await db.all(query, [name]);
-        db.close();
-        console.log(results);
-        res.json(results);
+      let db = await getDBConnection();
+      let name = req.body.item;
+      let query = "SELECT * FROM review WHERE recipe = ?"
+      let results = await db.all(query, [name]);
+      db.close();
+      res.json(results);
     } catch (err) {
-        console.error(err);
+      res.status(500).send("Server error, please try again later"); 
     }
 
 })
