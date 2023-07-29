@@ -85,9 +85,3 @@ Back End
   * An example response
   * A separate description, example request, and example response for all optional parameters
   * What errors can be returned
-
-
-
-
-
-If we find inappropriate content or plagiarism in projects **you will be ineligible for any points on the project**. Ask the instructor if you're unsure if your work is cited appropriately. Any external sources like images should be cited where used in the source code or (ideally) visible in a page footer. Refer to this [copyright example](https://courses.cs.washington.edu/courses/cse154/23sp/resources/assets/code-examples/copyright-examples/copyrightexample2.html) page for how to cite images from different sources.
