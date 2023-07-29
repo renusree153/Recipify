@@ -334,9 +334,11 @@ app.post('/purchase', async (req, res) => {
 app.post('/purchaseID', async (req, res) => {
   try {
     let user = req.body.user;
+    console.log(user);
     let db = await getDBConnection();
     let queryDate = "SELECT date FROM purchases WHERE user = ? ORDER BY date DESC";
     let date = await db.get(queryDate, [user]);
+    console.log(date);
     let purchaseID = createID(date.date, user);
     let queryAdd = "INSERT INTO purchaseInfo (purchaseID, user, date) VALUES (?, ?, ?)";
     db.run(queryAdd, [purchaseID, user, date.date]);
@@ -451,7 +453,6 @@ app.post("/getPurchases", async (req, res) => {
   let db = await getDBConnection();
   let query = "SELECT * FROM purchaseInfo AS t JOIN purchases AS p ON t.user = p.user WHERE t.user = ?";
   let all = await db.all(query, [userName]);
-  console.log("all" + all);
   db.close();
   res.json(all);
 });

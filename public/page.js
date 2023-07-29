@@ -176,7 +176,9 @@
    * in order to check if it is available. 
    */
   async function purchase(id) {
+    let user = window.localStorage.getItem('user');
     let bodyData = new FormData();
+    bodyData.append("user", user);
     bodyData.append("id", id);
     let response = await fetch('checkAvailable', {method: 'post', body:bodyData});
     let data = await response.json();
