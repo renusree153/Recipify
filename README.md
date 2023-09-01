@@ -63,25 +63,4 @@ Back End
   * The user provides at minimum a username, password, and e-mail.
   * The user information is added to the database.
 
-## Front End Internal
 
-* POST requests send data using the `FormData` object/datatype through the body.
-
-## Back End Internal
-
-  * All POST endpoints support the formats: JSON, FormData, URL-Encoded
-  * All Node endpoints either return JSON or text type
-  * Node app handles all possible errors.
-
-## Documentation
-
-`APIDOC.md` document includes the following:
-  * The name of the endpoint
-  * A non-trivial description of its purpose
-  * What method it uses (GET vs. POST)
-  * What parameters it takes (and their names and expected formats)
-  * What its return type is
-  * An example request
-  * An example response
-  * A separate description, example request, and example response for all optional parameters
-  * What errors can be returned
