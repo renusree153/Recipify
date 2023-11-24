@@ -1,6 +1,6 @@
 # Recipify
 
-A grocery shopping website that supports authentication and allows users to make purchases. For each grocery item, users can also view a list of recommended recipes that can be made with the given grocery and are able to provide ratings and feedback on the recipes as well. Users can also make grocery purchases either one item at a time or in bulk. Below is a detailed breakdown of each feature. 
+A grocery shopping web app supporting authentication and ability to make purchases. For each grocery item, users can view a list of personalized recommended recipes that can be made with the given item and are also able to provide ratings and feedback on the recipes to interact with others users using the platform. Below is a detailed breakdown of each feature. 
 
 ## Feature 1: all grocery items are displayed on main page
 Front End
